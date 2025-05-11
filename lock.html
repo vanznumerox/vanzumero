@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akses Premium</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: #000;
+      color: #00ff00;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.8);
+      border: 2px solid #00ff00;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+      text-align: center;
+    }
+
+    h1 {
+      color: #00ff00;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+    }
+
+    .info-text {
+      color: #adff2f;
+      margin-bottom: 15px;
+      font-size: 1.0em;
+    }
+
+    .wa-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #25d366;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    .wa-button:hover {
+      background-color: #128c7e;
+    }
+
+    .button {
+      background-color: #00ff00;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      margin-bottom: 15px;
+    }
+
+    .button:hover {
+      background-color: #adff2f;
+      color: #000;
+    }
+
+    #akses-ditolak {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      border: 1px dashed #00ff00;
+      border-radius: 5px;
+    }
+
+    #akses-ditolak p {
+      color: #adff2f;
+      margin-bottom: 10px;
+    }
+
+    .input-field {
+      background-color: #222;
+      color: #00ff00;
+      border: 1px solid #00ff00;
+      padding: 8px;
+      border-radius: 3px;
+      margin-bottom: 10px;
+      font-family: 'Courier New', monospace;
+      width: 80%;
+      box-sizing: border-box;
+    }
+
+    #hasil-verifikasi {
+      color: #ff4500;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    /* Efek teks berkedip (opsional) */
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .info-text strong {
+      animation: blink 1s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1><span style="color: #ff4500;">ACCESS</span> <span style="color: #00ff00;">DENIED</span></h1>
+    <p class="info-text">mau akses fitur premium?silahkan chat admin</p>
+    <strong style="color: #ffff00;">WHATSAPP!</strong>
+    <a href="https://wa.me/6283120643303" class="wa-button" target="_blank">Establish Connection</a>
+    <button id="akses-fitur" class="button">Attempt Access</button>
+    <div id="akses-ditolak">
+      <p style="color: #ff8c00;">Authorization Required. Input security key to proceed.</p>
+      <input id="kunci" type="text" class="input-field" placeholder="Enter Security Key">
+      <button id="verifikasi-kunci" class="button">Verify Key</button>
+      <p id="hasil-verifikasi"></p>
+    </div>
+  </div>
+
+  <script>
+    const aksesFiturButton = document.getElementById('akses-fitur');
+    const aksesDitolakDiv = document.getElementById('akses-ditolak');
+    const kunciInput = document.getElementById('kunci');
+    const verifikasiKunciButton = document.getElementById('verifikasi-kunci');
+    const hasilVerifikasiP = document.getElementById('hasil-verifikasi');
+
+    aksesFiturButton.addEventListener('click', () => {
+      aksesDitolakDiv.style.display = 'block';
+    });
+
+    verifikasiKunciButton.addEventListener('click', () => {
+  const kunci = kunciInput.value.trim();
+  switch (kunci) {
+    case 'VANZ-KEY-PREMSUBDO':
+      window.location.href = 'subdo-finder.html';
+      break;
+    case 'VANZ-KEY-PREMIP':
+      window.location.href = 'cekip.html';
+      break;
+    case 'VANZ-KEY-PREMNEGARA':
+      window.location.href = 'negara-src.html';
+      break;
+    case 'VANZ-KEY-PREMENC':
+      window.location.href = 'enc&dec.html';
+      break;
+    case 'VANZ-KEY-PREMPW':
+      window.location.href = 'pwgenerator.html';
+      break;
+    default:
+      hasilVerifikasiP.textContent = 'ACCESS KEY INCORRECT!';
+  }
+});
+  </script>
+</body>
+</html>

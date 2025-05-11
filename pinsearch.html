@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinterest Image Search</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #00ff00;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #00ff00;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #333;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            width: 80%;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #00ff00;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #00cc00;
+        }
+
+        #image-container {
+            margin-top: 20px;
+            border: 1px dashed #00ff00;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        #pinterest-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 5px #00ff00;
+        }
+
+        #message {
+            color: #fff;
+            margin-top: 10px;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #999;
+            text-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pinterest Image Search</h1>
+        <input type="text" id="search-query" placeholder="Enter your search query">
+        <button onclick="searchImage()">Search</button>
+        <div id="image-container" style="display: none;">
+            <img id="pinterest-image" src="" alt="Pinterest Image">
+            <p id="message"></p>
+            <button onclick="searchImage()">Next Image</button>
+        </div>
+        <p class="footer">Powered by a vanz numero</p>
+    </div>
+
+    <script>
+        async function pinterest(query) {
+            try {
+                const response = await fetch(`https://api.vreden.my.id/api/pinterest?query=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                if (data && data.result && data.result.length > 0) {
+                    return data.result[Math.floor(Math.random() * data.result.length)];
+                } else {
+                    return null;
+                }
+            } catch (err) {
+                console.error("Error fetching image:", err);
+                throw new Error("Failed to fetch image.");
+            }
+        }
+
+        async function searchImage() {
+            const query = document.getElementById("search-query").value;
+            if (!query) {
+                alert("Please enter a search query.");
+                return;
+            }
+
+            document.getElementById("image-container").style.display = "none";
+            document.getElementById("message").innerText = "Searching for image...";
+
+            try {
+                const imageUrl = await pinterest(query);
+                if (imageUrl) {
+                    document.getElementById("pinterest-image").src = imageUrl;
+                    document.getElementById("message").innerText = "Here's the image you searched for. Want more?";
+                    document.getElementById("image-container").style.display = "block";
+                } else {
+                    document.getElementById("message").innerText = "Image not found.";
+                    document.getElementById("image-container").style.display = "none";
+                }
+            } catch (error) {
+                document.getElementById("message").innerText = error.message;
+                document.getElementById("image-container").style.display = "none";
+            }
+        }
+
+        document.getElementById("search-query").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                searchImage();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Game Ular Sederhana (Mobile)</title>
+    <meta name="google-site-verification" content="_9f2HoaFKqL5OOTl25VwWD4UeeQ2yc912RxuOme94g4" />
+<style>
+  body {
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    background-color: silver;
+  }
+  #nameInputContainer {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  #playerName {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+  #startButton {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  #gameContainer {
+    position: relative;
+  }
+  #gameCanvas {
+    border: 5px solid black;
+  }
+  #score {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+  .controls {
+    display: flex;
+    margin-top: 20px;
+  }
+  .control-button {
+    padding: 15px;
+    margin: 5px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    min-width: 60px;
+    text-align: center;
+  }
+  @media (orientation: landscape) {
+    .controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+  @media (orientation: portrait) {
+    .controls {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div id="nameInputContainer">
+    Nama: <input type="text" id="playerName">
+    <button id="startButton" onclick="startGame()">Mulai Game</button>
+  </div>
+
+  <div id="gameContainer">
+    <canvas id="gameCanvas" width="300" height="300"></canvas>
+    <div class="controls">
+      <button class="control-button" onclick="changeDirection('up')">Atas</button>
+      <div>
+        <button class="control-button" onclick="changeDirection('left')">Kiri</button>
+        <button class="control-button" onclick="changeDirection('right')">Kanan</button>
+      </div>
+      <button class="control-button" onclick="changeDirection('down')">Bawah</button>
+    </div>
+  </div>
+
+  <div id="score">Skor: 0</div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('score');
+    const nameInputContainer = document.getElementById('nameInputContainer');
+    const startButton = document.getElementById('startButton');
+    const gameContainer = document.getElementById('gameContainer');
+    let playerName = '';
+    let grid = 10;
+    let count = 0;
+    let snake = {
+      x: 160,
+      y: 160,
+      dx: grid,
+      dy: 0,
+      cells: [],
+      maxCells: 4
+    };
+    let apple = {
+      x: 320,
+      y: 320
+    };
+    let gameInterval;
+    let isGameRunning = false;
+
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    function createApple() {
+      apple.x = getRandomInt(0, canvas.width / grid) * grid;
+      apple.y = getRandomInt(0, canvas.height / grid) * grid;
+    }
+
+    function startGame() {
+      playerName = document.getElementById('playerName').value.trim();
+      if (playerName === '') {
+        alert('Silakan masukkan nama Anda!');
+        return;
+      }
+      nameInputContainer.style.display = 'none';
+      snake = {
+        x: 160,
+        y: 160,
+        dx: grid,
+        dy: 0,
+        cells: [],
+        maxCells: 4
+      };
+      scoreDisplay.textContent = 'Skor: 0';
+      count = 0;
+      createApple();
+      clearInterval(gameInterval);
+      gameInterval = setInterval(gameLoop, 100);
+      isGameRunning = true;
+    }
+
+    function gameLoop() {
+      if (!isGameRunning) return;
+      requestAnimationFrame(updateGame);
+    }
+
+    function updateGame() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      snake.x += snake.dx;
+      snake.y += snake.dy;
+
+      if (snake.x < 0) {
+        snake.x = canvas.width - grid;
+      } else if (snake.x >= canvas.width) {
+        snake.x = 0;
+      }
+
+      if (snake.y < 0) {
+        snake.y = canvas.height - grid;
+      } else if (snake.y >= canvas.height) {
+        snake.y = 0;
+      }
+
+      snake.cells.unshift({ x: snake.x, y: snake.y });
+
+      if (snake.cells.length > snake.maxCells) {
+        snake.cells.pop();
+      }
+
+      ctx.fillStyle = 'red';
+      ctx.fillRect(apple.x, apple.y, grid - 1, grid - 1);
+
+      ctx.fillStyle = 'green';
+      snake.cells.forEach(function(cell, index) {
+        ctx.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+
+        if (cell.x === apple.x && cell.y === apple.y) {
+          snake.maxCells++;
+          count++;
+          scoreDisplay.textContent = 'Skor: ' + count;
+          createApple();
+        }
+
+        for (let i = index + 1; i < snake.cells.length; i++) {
+          if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+            gameOver();
+          }
+        }
+      });
+    }
+
+    function gameOver() {
+      clearInterval(gameInterval);
+      isGameRunning = false;
+      alert(`Game Over, ${playerName}! Skor Anda: ${count}`);
+      nameInputContainer.style.display = 'flex';
+      document.getElementById('playerName').value = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (!isGameRunning) return;
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault();
+      }
+      if (e.key === 'ArrowLeft' && snake.dx === 0) {
+        snake.dx = -grid;
+        snake.dy = 0;
+      } else if (e.key === 'ArrowUp' && snake.dy === 0) {
+        snake.dy = -grid;
+        snake.dx = 0;
+      } else if (e.key === 'ArrowRight' && snake.dx === 0) {
+        snake.dx = grid;
+        snake.dy = 0;
+      } else if (e.key === 'ArrowDown' && snake.dy === 0) {
+        snake.dy = grid;
+        snake.dx = 0;
+      }
+    });
+
+    function changeDirection(direction) {
+      if (!isGameRunning) return;
+      if (direction === 'left' && snake.dx === 0) {
+        snake.dx = -grid;
+        snake.dy = 0;
+      } else if (direction === 'up' && snake.dy === 0) {
+        snake.dy = -grid;
+        snake.dx = 0;
+      } else if (direction === 'right' && snake.dx === 0) {
+        snake.dx = grid;
+        snake.dy = 0;
+      } else if (direction === 'down' && snake.dy === 0) {
+        snake.dy = grid;
+        snake.dx = 0;
+      }
+    }
+  </script>
+
+</body>
+</html>

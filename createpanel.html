@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Panel</title>
+  <style>
+    body {
+      background-image: url('bg.jpg'); /* Ganti dengan nama file background kamu */
+      background-size: cover;
+      background-position: center;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      max-width: 400px;
+      width: 100%;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 10px;
+    }
+    button {
+      background-color: #00ff88;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #00cc6a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Create Panel</h2>
+    <form action="create.php" method="POST">
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="text" name="nomor" placeholder="Nomor WhatsApp" required>
+      <input type="text" name="password" placeholder="Password Panel" required>
+      <select name="ukuran" required>
+        <option value="1">1 GB</option>
+        <option value="2">2 GB</option>
+        <option value="3">3 GB</option>
+        <option value="4">4 GB</option>
+        <option value="5">5 GB</option>
+        <option value="6">6 GB</option>
+        <option value="7">7 GB</option>
+        <option value="8">8 GB</option>
+        <option value="9">9 GB</option>
+        <option value="10">10 GB</option>
+        <option value="unli">Unlimited</option>
+      </select>
+      <button type="submit">Buat Panel</button>
+    </form>
+  </div>
+</body>
+</html>

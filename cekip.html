@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Lookup</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #00ff00;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            box-shadow: 0 0 10px #00ff00;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px #00ff00;
+        }
+        p#ip-address {
+            font-size: 1.5em;
+        }
+        .blinking-cursor {
+            font-weight: bold;
+            color: #00ff00;
+            animation: blink 1s infinite step-end;
+        }
+        @keyframes blink {
+            from, to { color: transparent }
+            50% { color: #00ff00; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><span class="blinking-cursor">_</span> IP Address Found</h1>
+        <p id="ip-address">Loading...</p>
+    </div>
+
+    <script>
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ip-address').textContent = data.ip;
+            })
+            .catch(error => {
+                document.getElementById('ip-address').textContent = 'Error fetching IP';
+                console.error('Error fetching IP:', error);
+            });
+    </script>
+</body>
+</html>

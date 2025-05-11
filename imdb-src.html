@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMDb Info</title>
+    <style>
+        body {
+            font-family: monospace;
+            background-color: #111;
+            color: #00ff00;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ff00;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #00ff00;
+            width: 90%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        h1 {
+            color: #00ff00;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 0 8px #00ff00;
+            font-size: 2em;
+        }
+
+        .input-group {
+            display: flex;
+            margin-bottom: 25px;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 12px;
+            background-color: #222;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            border-radius: 5px 0 0 5px;
+            font-family: monospace;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #00ff00;
+            color: #000;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        #results {
+            margin-top: 25px;
+            padding: 20px;
+            border: 1px dashed #00ff00;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Tengah horizontal untuk foto */
+        }
+
+        #results img {
+            max-width: 250px;
+            height: auto;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            margin-top: 15px; /* Jarak antara tabel dan foto */
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse; /* Gabungkan border tabel */
+            margin-bottom: 15px; /* Jarak antar tabel */
+        }
+
+        .info-table th, .info-table td {
+            padding: 8px;
+            border: 1px solid #00ff00;
+            text-align: left;
+        }
+
+        .info-table th {
+            color: #00cc00;
+            font-weight: bold;
+            width: 30%; /* Lebar kolom label */
+        }
+
+        .loading {
+            color: #ffff00;
+        }
+
+        .error {
+            color: #ff0000;
+        }
+
+        /* Hacker-like blinking cursor effect */
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            background-color: #00ff00;
+            animation: blink 1s infinite step-end;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><span class="cursor"></span> IMDb Movie/Series Search</h1>
+        <div class="input-group">
+            <input type="text" id="searchInput" placeholder="Enter movie or series name">
+            <button onclick="searchIMDb()">Search</button>
+        </div>
+        <div id="results"></div>
+    </div>
+
+    <script>
+    const resultsDiv = document.getElementById('results');
+    const searchInput = document.getElementById('searchInput');
+    const apiKey = '742b2d09';
+
+    async function searchIMDb() {
+        const searchText = searchInput.value.trim();
+        if (!searchText) {
+            resultsDiv.textContent = 'Please enter a movie or series name.';
+            return;
+        }
+
+        resultsDiv.innerHTML = 'Searching... <span class="loading"></span>';
+
+        try {
+            const proxy = 'https://corsproxy.io/?';
+            const url = `https://www.omdbapi.com/?apikey=${apiKey}&t=${encodeURIComponent(searchText)}&plot=full`;
+            const response = await fetch(proxy + url); // jangan encode lagi
+
+            const data = await response.json();
+
+            if (data.Response === 'True') {
+                let table1HTML = `<table class="info-table">`;
+                table1HTML += `<tr><th>Title</th><td>${data.Title}</td></tr>`;
+                table1HTML += `<tr><th>Year</th><td>${data.Year}</td></tr>`;
+                table1HTML += `<tr><th>Rated</th><td>${data.Rated}</td></tr>`;
+                table1HTML += `<tr><th>Released</th><td>${data.Released}</td></tr>`;
+                table1HTML += `<tr><th>Runtime</th><td>${data.Runtime}</td></tr>`;
+                table1HTML += `<tr><th>Genre</th><td>${data.Genre}</td></tr>`;
+                table1HTML += `<tr><th>Director</th><td>${data.Director}</td></tr>`;
+                table1HTML += `<tr><th>Writer</th><td>${data.Writer}</td></tr>`;
+                table1HTML += `<tr><th>Actors</th><td>${data.Actors}</td></tr>`;
+                table1HTML += `</table>`;
+
+                let table2HTML = `<table class="info-table">`;
+                table2HTML += `<tr><th>Plot</th><td>${data.Plot}</td></tr>`;
+                table2HTML += `<tr><th>Language</th><td>${data.Language}</td></tr>`;
+                table2HTML += `<tr><th>Country</th><td>${data.Country}</td></tr>`;
+                table2HTML += `<tr><th>Awards</th><td>${data.Awards}</td></tr>`;
+                table2HTML += `<tr><th>BoxOffice</th><td>${data.BoxOffice}</td></tr>`;
+                table2HTML += `<tr><th>Production</th><td>${data.Production}</td></tr>`;
+                table2HTML += `<tr><th>imdbRating</th><td>${data.imdbRating}</td></tr>`;
+                table2HTML += `<tr><th>imdbVotes</th><td>${data.imdbVotes}</td></tr>`;
+                table2HTML += `</table>`;
+
+                let imageHTML = `<img src="${data.Poster}" alt="Poster">`;
+
+                resultsDiv.innerHTML = table1HTML + table2HTML + imageHTML;
+
+            } else {
+                resultsDiv.innerHTML = `<p class="error">Error: ${data.Error}</p>`;
+            }
+
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            resultsDiv.innerHTML = '<p class="error">An error occurred while fetching data.</p>';
+        }
+    }
+
+    searchInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            searchIMDb();
+        }
+    });
+</script>
+
+
+</body>
+</html>

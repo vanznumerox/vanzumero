@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Downloader Elegan</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 15px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result-container {
+            margin-top: 30px;
+            text-align: left;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .result-container h2 {
+            color: #333;
+            margin-top: 0;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .result-item {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .result-item strong {
+            color: #333;
+        }
+
+        .download-button {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-button:hover {
+            background-color: #1e7e34;
+        }
+
+        .error-message {
+            color: #dc3545;
+            margin-top: 15px;
+        }
+
+        .loading-indicator {
+            color: #007bff;
+            margin-top: 15px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Unduh Video TikTok</h1>
+        <div class="input-group">
+            <input type="text" id="tiktokUrl" placeholder="Masukkan URL TikTok di sini">
+            <button onclick="downloadTikTok()">Unduh</button>
+        </div>
+        <div id="result" class="result-container" style="display: none;">
+            <h2>Informasi Video</h2>
+            <div id="videoInfo"></div>
+            <a id="downloadLink" href="#" class="download-button" style="display: none;">Unduh Video</a>
+            <a id="downloadAudioLink" href="#" class="download-button" style="display: none;">Unduh Audio</a>
+        </div>
+        <p id="errorMessage" class="error-message" style="display: none;"></p>
+        <p id="loadingMessage" class="loading-indicator" style="display: none;">Sedang memproses...</p>
+    </div>
+
+    <script>
+        async function downloadTikTok() {
+            const url = document.getElementById('tiktokUrl').value.trim();
+            const resultContainer = document.getElementById('result');
+            const videoInfoDiv = document.getElementById('videoInfo');
+            const downloadLink = document.getElementById('downloadLink');
+            const downloadAudioLink = document.getElementById('downloadAudioLink');
+            const errorMessage = document.getElementById('errorMessage');
+            const loadingMessage = document.getElementById('loadingMessage');
+
+            if (!url) {
+                errorMessage.textContent = 'Harap masukkan URL TikTok!';
+                errorMessage.style.display = 'block';
+                resultContainer.style.display = 'none';
+                loadingMessage.style.display = 'none';
+                return;
+            }
+
+            errorMessage.style.display = 'none';
+            resultContainer.style.display = 'none';
+            loadingMessage.style.display = 'block';
+            videoInfoDiv.innerHTML = '';
+            downloadLink.style.display = 'none';
+            downloadAudioLink.style.display = 'none';
+
+            try {
+                const apiUrl = `https://api.agatz.xyz/api/tiktok?url=${encodeURIComponent(url)}`;
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                loadingMessage.style.display = 'none';
+
+                if (!data.status) {
+                    errorMessage.textContent = 'Gagal mengambil video!';
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+
+                const result = data.data;
+                let caption = `
+                    <div class="result-item"><strong>Judul:</strong> ${result.title}</div>
+                    <div class="result-item"><strong>Durasi:</strong> ${result.duration}</div>
+                    <div class="result-item"><strong>Diunggah:</strong> ${result.taken_at}</div>
+                    <div class="result-item"><strong>Region:</strong> ${result.region}</div>
+                    <hr>
+                    <div class="result-item"><strong>Pembuat Konten:</strong></div>
+                    <div class="result-item"><strong>Nama:</strong> ${result.author.fullname} (@${result.author.nickname})</div>
+                    <div class="result-item"><strong>Avatar:</strong> <a href="${result.author.avatar}" target="_blank">Lihat Avatar</a></div>
+                    <hr>
+                    <div class="result-item"><strong>Musik:</strong></div>
+                    <div class="result-item"><strong>Judul:</strong> ${result.music_info.title}</div>
+                    <div class="result-item"><strong>Artis:</strong> ${result.music_info.author}</div>
+                    <div class="result-item"><strong>Link Musik:</strong> <a href="${result.music_info.url}" target="_blank">Dengarkan</a></div>
+                    <hr>
+                    <div class="result-item"><strong>Statistik:</strong></div>
+                    <div class="result-item"><strong>Views:</strong> ${result.stats.views}</div>
+                    <div class="result-item"><strong>Likes:</strong> ${result.stats.likes}</div>
+                    <div class="result-item"><strong>Komentar:</strong> ${result.stats.comment}</div>
+                    <div class="result-item"><strong>Shares:</strong> ${result.stats.share}</div>
+                    <div class="result-item"><strong>Unduhan:</strong> ${result.stats.download}</div>
+                `.trim();
+
+                videoInfoDiv.innerHTML = caption;
+                resultContainer.style.display = 'block';
+
+                let videoUrl = result.data.find(v => v.type === "nowatermark_hd")?.url ||
+                               result.data.find(v => v.type === "nowatermark")?.url ||
+                               result.data.find(v => v.type === "watermark")?.url;
+
+                if (videoUrl) {
+                    downloadLink.href = videoUrl;
+                    downloadLink.style.display = 'inline-block';
+                    downloadLink.download = `${result.title.replace(/[^a-z0-9]/gi, '_') || 'tiktok_video'}.mp4`;
+                } else {
+                    errorMessage.textContent = 'Video tidak ditemukan dengan kualitas yang sesuai.';
+                    errorMessage.style.display = 'block';
+                }
+
+                if (result.music_info.url) {
+                    downloadAudioLink.href = result.music_info.url;
+                    downloadAudioLink.style.display = 'inline-block';
+                    downloadAudioLink.download = `${result.music_info.title.replace(/[^a-z0-9]/gi, '_') || 'tiktok_audio'}.mp3`;
+                }
+
+            } catch (error) {
+                console.error("Terjadi kesalahan:", error);
+                errorMessage.textContent = 'Terjadi kesalahan saat memproses permintaan.';
+                errorMessage.style.display = 'block';
+                loadingMessage.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

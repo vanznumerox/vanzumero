@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Toko Online</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: url('foto.jpg') no-repeat center center fixed;
+      background-size: cover;
+      padding-bottom: 70px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      background-color: rgba(255,255,255,0.9);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .product-item {
+      background: none;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+
+    .product-item img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+
+    .checkout-button, .add-cart-button {
+      margin-top: 5px;
+      display: block;
+      background-color: blue;
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 5px;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 0.9em;
+    }
+
+    .search-bar {
+      margin-bottom: 15px;
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .bottom-navigation {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #f8f8f8;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      z-index: 1000;
+    }
+
+    .nav-item a {
+      text-decoration: none;
+      color: #333;
+      font-size: 0.9em;
+    }
+
+    .notification-badge {
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      padding: 4px 8px;
+      font-size: 0.7em;
+      position: absolute;
+      top: -8px;
+      right: -8px;
+    }
+
+    .cart-icon {
+      position: relative;
+    }
+
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #333;
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 5px;
+      opacity: 0.9;
+      display: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <h2><center>Toko Digital Vanz Numero</center></h2>
+  <div class="toast" id="toast"></div>
+
+  <div class="container">
+  <input type="text" class="search-bar" placeholder="Cari produk...">
+  <h2><center>Panel Bot wa</center></h2>
+  <div class="product-grid" id="product-list-1"></div>
+</div>
+
+<div class="container">
+  <input type="text" class="search-bar" placeholder="Cari produk...">
+  <h2><center>Hosting Nokos</center></h2>
+  <div class="product-grid" id="product-list-2"></div>
+</div>
+
+<div class="container">
+  <input type="text" class="search-bar" placeholder="Cari produk...">
+  <h2><center>Diamond Free Fire</center></h2>
+  <div class="product-grid" id="product-list-3"></div>
+</div>
+
+  
+<div class="container">
+  <input type="text" class="search-bar" placeholder="Cari produk...">
+  <h2><center>Suntik Follower Tiktok</center></h2>
+  <div class="product-grid" id="product-list-4"></div>
+</div>
+
+  <div class="container">
+  <input type="text" class="search-bar" placeholder="Cari produk...">
+  <h2><center>Suntik Like Tiktok</center></h2>
+  <div class="product-grid" id="product-list-5"></div>
+</div>
+
+  
+
+
+   
+
+  <div class="bottom-navigation">
+    <div class="nav-item"><a href="#">Beranda</a></div>
+    <div class="nav-item"><a href="#">Kategori</a></div>
+    <div class="nav-item cart-icon">
+      <a href="#" onclick="openCart()">Keranjang <span class="notification-badge" id="cart-count">0</span></a>
+    </div>
+    <div class="nav-item"><a href="#">Akun</a></div>
+  </div>
+
+  <script>
+    const produkList = [
+      { nama: "Panel Bot 1gb", harga: 1000, img: "panel.jpg" },
+      { nama: "Panel Bot 2gb", harga: 2000, img: "panel.jpg" },
+      { nama: "Panel Bot 3gb", harga: 3000, img: "panel.jpg" },
+      { nama: "Panel Bot 4gb", harga: 4000, img: "panel.jpg" },
+      { nama: "Panel Bot 5gb", harga: 5000, img: "panel.jpg" },
+      { nama: "Panel Bot 6gb", harga: 6000, img: "panel.jpg" },
+      { nama: "Panel Bot 7gb", harga: 7000, img: "panel.jpg" },
+      { nama: "Panel Bot 8gb", harga: 8000, img: "panel.jpg" },
+      { nama: "Panel Bot 9gb", harga: 9000, img: "panel.jpg" },
+      { nama: "Panel Bot 10gb", harga: 10000, img: "panel.jpg" },      
+    ];
+  
+
+const ProdukNokos = [
+  { nama: "Nokos Whatsapp", harga: 6000, img: "nokoswa.jpg" },
+  { nama: "Nokos Telegram", harga: 3500, img: "nokostele.jpg" },
+];
+
+const domainProduk = [
+  { nama: "5 Diamond", harga: 1000, img: "diamondff.jpg" },
+ { nama: "12 Diamond", harga: 2000, img: "diamondff.jpg" },
+    { nama: "70 Diamond", harga: 10000, img: "diamondff.jpg" },
+    { nama: "100 Diamond", harga: 14000, img: "diamondff.jpg" },
+    { nama: "150 Diamond", harga: 19000, img: "diamondff.jpg" },
+    { nama: "200 Diamond", harga: 27000, img: "diamondff.jpg" },
+];
+
+const suntikTiktokf = [
+  { nama: "100 Follow", harga: 1000, img: "tiktok.jpg" },
+ { nama: "200 Follow", harga: 2000, img: "tiktok.jpg" },
+    { nama: "300 Follow", harga: 3000, img: "tiktok.jpg" },
+    { nama: "400 Follow", harga: 4000, img: "tiktok.jpg" },
+    { nama: "500 Follow", harga: 5000, img: "tiktok.jpg" },
+    { nama: "600 Follow", harga: 6000, img: "tiktok.jpg" },
+  { nama: "700 Follow", harga: 7000, img: "tiktok.jpg" },
+  { nama: "800 Follow", harga: 8000, img: "tiktok.jpg" },
+  { nama: "900 Follow", harga: 9000, img: "tiktok.jpg" },
+  { nama: "1000 Follow", harga: 10000, img: "tiktok.jpg" },
+];
+
+
+const suntikTiktokl = [
+  { nama: "1000 like", harga: 1000, img: "tiktok.jpg" },
+ { nama: "2000 like", harga: 2000, img: "tiktok.jpg" },
+    { nama: "3000 like", harga: 3000, img: "tiktok.jpg" },
+    { nama: "4000 like", harga: 4000, img: "tiktok.jpg" },
+    { nama: "5000 like", harga: 5000, img: "tiktok.jpg" },
+    { nama: "6000 like", harga: 6000, img: "tiktok.jpg" },
+  { nama: "7000 like", harga: 7000, img: "tiktok.jpg" },
+  { nama: "8000 like", harga: 8000, img: "tiktok.jpg" },
+  { nama: "9000 like", harga: 9000, img: "tiktok.jpg" },
+  { nama: "1000 like", harga: 10000, img: "tiktok.jpg" },
+];
+
+
+
+
+
+
+
+
+  
+    let keranjang = JSON.parse(localStorage.getItem("keranjang")) || [];
+
+    function updateKeranjang() {
+      localStorage.setItem("keranjang", JSON.stringify(keranjang));
+      document.getElementById("cart-count").textContent = keranjang.length;
+    }
+
+    function tambahKeKeranjang(index) {
+      keranjang.push(produkList[index]);
+      updateKeranjang();
+      showToast("Produk ditambahkan ke keranjang!");
+    }
+
+    function showToast(pesan) {
+      const toast = document.getElementById("toast");
+      toast.textContent = pesan;
+      toast.style.display = "block";
+      setTimeout(() => toast.style.display = "none", 2000);
+    }
+
+    
+          function buatProduk(listId, produkArray) {
+  const list = document.getElementById(listId);
+  produkArray.forEach((p, i) => {
+    const div = document.createElement("div");
+    div.className = "product-item";
+    div.innerHTML = `
+      <img src="${p.img}" alt="${p.nama}">
+      <h3>${p.nama}</h3>
+      <p class="price">Rp ${p.harga.toLocaleString()}</p>
+      <button class="add-cart-button" onclick='tambahKeKeranjangManual(${JSON.stringify(p)})'>Tambah ke Keranjang</button>
+      <a href="https://wa.me/6283120643303?text=Hallo,%20saya%20mau%20membeli%20produk%20${encodeURIComponent(p.nama)}%20seharga%20Rp%20${p.harga.toLocaleString()}%20pada%20${new Date().toLocaleDateString('id-ID')}" class="checkout-button" target="_blank">Checkout</a>
+    `;
+    list.appendChild(div);
+  });
+}
+
+ buatProduk("product-list-1", produkList);
+buatProduk("product-list-2", ProdukNokos);
+buatProduk("product-list-3", domainProduk);
+  buatProduk("product-list-4", suntikTiktokf);
+  buatProduk("product-list-5", suntikTiktokl);
+  
+
+  
+function tambahKeKeranjangManual(item) {
+  keranjang.push(item);
+  updateKeranjang();
+  showToast("Produk ditambahkan ke keranjang!");
+}
+
+
+    function openCart() {
+      if (keranjang.length === 0) {
+        alert("Keranjang masih kosong!");
+        return;
+      }
+      let teks = "Hallo, saya ingin membeli produk berikut:%0A";
+      keranjang.forEach((item, i) => {
+        teks += `- ${item.nama} (Rp ${item.harga.toLocaleString()})%0A`;
+      });
+      teks += `%0ATanggal: ${new Date().toLocaleDateString('id-ID')}`;
+      window.open(`https://wa.me/NomorWhatsAppAnda?text=${teks}`, "_blank");
+    }
+
+    buatProduk();
+  </script>
+</body>
+</html>

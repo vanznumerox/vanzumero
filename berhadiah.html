@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mesin Putar Berhadiah - Hacker LED</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root {
+      --led-color: #00ff00;
+      --bg-dark: #000;
+      --bg-container: #111;
+      --text-light: #fff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Consolas', monospace;
+      background-color: var(--bg-dark);
+      color: var(--led-color);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      box-sizing: border-box;
+      padding-bottom: 70px; /* untuk space di bawah navigasi */
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--bg-container);
+      border: 2px solid var(--led-color);
+      border-radius: 10px;
+      box-shadow: 0 0 20px var(--led-color);
+      padding: 30px 20px;
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    h1 {
+      text-shadow: 0 0 10px var(--led-color);
+      margin-bottom: 20px;
+    }
+
+    .input-nama {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .input-nama input {
+      padding: 10px;
+      border: 1px solid var(--led-color);
+      background-color: var(--bg-container);
+      color: var(--text-light);
+      border-radius: 5px;
+      font-family: 'Consolas', monospace;
+    }
+
+    .input-nama button {
+      background: #222;
+      color: var(--led-color);
+      border: 2px solid var(--led-color);
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 8px;
+      font-family: 'Consolas', monospace;
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--led-color);
+      transition: 0.3s ease;
+    }
+
+    .input-nama button:hover {
+      background: var(--led-color);
+      color: #000;
+      box-shadow: 0 0 15px #fff;
+      border-color: #fff;
+    }
+
+    .input-nama button:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 5px var(--led-color);
+    }
+
+    .wheel-container {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      margin: 30px auto;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid var(--led-color);
+      box-shadow: 0 0 15px var(--led-color);
+    }
+
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-image: conic-gradient(
+        #00ff00, #00b300, #ccff00, #a6ff00, #00ff66,
+        #00ffcc, #00ccff, #00b3ff, #0066ff, #0000ff,
+        #6600ff, #cc00ff, #ff00cc, #ff0066, #ff0000
+      );
+      transition: transform 3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      filter: brightness(120%);
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-style: preserve-3d;
+    }
+
+    .wheel-container::before {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      right: 5px;
+      bottom: 5px;
+      border-radius: 50%;
+      border: 2px solid var(--led-color);
+      z-index: 1;
+    }
+
+    .segment {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: center;
+      text-align: center;
+    }
+
+.segment span {
+  display: block;
+  font-size: 10px;
+  font-weight: bold;
+  color: black;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 8px 12px;
+  border-radius: 1000px;
+  text-shadow: 0 0 5px var(--led-color);
+  white-space: nowrap;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+}
+
+    .pointer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-top: 25px solid var(--led-color);
+      z-index: 10;
+    }
+
+    .spin-button {
+      background: #222;
+      color: var(--led-color);
+      border: 2px solid var(--led-color);
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 8px;
+      font-family: 'Consolas', monospace;
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--led-color);
+      transition: 0.3s ease;
+      display: none; /* Sembunyikan tombol spin awal */
+      margin-top: 20px;
+    }
+
+    .spin-button:hover {
+      background: var(--led-color);
+      color: #000;
+      box-shadow: 0 0 15px #fff;
+      border-color: #fff;
+    }
+
+    .spin-button:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 5px var(--led-color);
+    }
+
+    .result-message {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      text-shadow: 0 0 8px var(--led-color);
+    }
+
+    .player-info {
+      margin-top: 20px;
+      font-size: 16px;
+      color: var(--text-light);
+      text-shadow: 0 0 5px var(--led-color);
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #111;
+      display: flex;
+      justify-content: space-around;
+      border-top: 2px solid var(--led-color);
+      padding: 10px 0;
+      box-shadow: 0 -2px 10px var(--led-color);
+      z-index: 999;
+    }
+
+    .bottom-nav a {
+      color: var(--led-color);
+      text-decoration: none;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .bottom-nav i {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>
+      <span style="text-shadow: 0 0 15px var(--led-color);">MESIN</span>
+      <span style="color: #fff; text-shadow: 0 0 15px #fff;">PUTAR</span>
+      <span style="text-shadow: 0 0 15px var(--led-color);">BERHADIAH</span>
+    </h1>
+
+    <div class="input-nama">
+      <input type="text" id="nameInput" placeholder="Masukkan Nama Anda">
+      <button id="submitNameButton">SUBMIT NAMA</button>
+    </div>
+
+    <div class="player-info" id="playerInfo" style="display: none;">
+      Nama: <span id="playerNameDisplay"></span>
+    </div>
+
+    <div class="wheel-container">
+      <div class="wheel"></div>
+      <div class="pointer"></div>
+    </div>
+
+    <button class="spin-button" id="spinButton">EXECUTE SPIN</button>
+    <div class="result-message" id="result"></div>
+  </div>
+  <h3>jika anda mendapatkan hadiah maka screenshot layar anda lalu kirim via wa</h3>
+  <nav class="bottom-nav">
+    <a href="index.html"><i class="fas fa-home"></i>Home</a>
+    <a href="#"><i class="fas fa-gift"></i>Spin</a>
+    <a href="https://wa.me/6283120643303"><i class="fa-solid fa-message"></i>Whatsapp</a>
+  </nav>
+
+  <script>
+    const wheel = document.querySelector('.wheel');
+    const spinButton = document.getElementById('spinButton');
+    const resultElement = document.getElementById('result');
+    const submitNameButton = document.getElementById('submitNameButton');
+    const nameInput = document.getElementById('nameInput');
+    const playerInfoDiv = document.getElementById('playerInfo');
+    const playerNameDisplay = document.getElementById('playerNameDisplay');
+    let playerName = '';
+    const defaultSegments = ['panel unli', '5 diamond', 'saldo 3k', 'own jb', 'nokos wa', 'panel 5gb'];
+    let segments = [...defaultSegments]; // Salin array default
+    const segmentCount = segments.length;
+    const degreesPerSegment = 360 / segmentCount;
+    let spinning = false;
+    let rotation = 0;
+
+    submitNameButton.addEventListener('click', () => {
+      playerName = nameInput.value.trim().toUpperCase();
+      if (playerName) {
+        playerNameDisplay.textContent = playerName;
+        playerInfoDiv.style.display = 'block';
+        document.querySelector('.input-nama').style.display = 'none'; // Sembunyikan input nama
+        spinButton.style.display = 'block'; // Tampilkan tombol spin
+
+        // Opsi: Jika Anda tetap ingin nama muncul di roda (opsional)
+        // const nameIndex = Math.floor(Math.random() * segments.length);
+        // segments = [...defaultSegments]; // Reset ke default
+        // segments[nameIndex] = playerName.substring(0, 7); // Batasi panjang nama jika terlalu panjang
+        wheel.innerHTML = ''; // Bersihkan roda lama
+        createSegments(); // Buat segmen baru (dengan atau tanpa nama di roda)
+
+      } else {
+        alert('Nama tidak boleh kosong!');
+      }
+    });
+
+    function createSegments() {
+      const wheelElement = document.querySelector('.wheel');
+      wheelElement.innerHTML = '';
+      segments.forEach((segment, index) => {
+        const angle = index * degreesPerSegment;
+        const segmentElement = document.createElement('div');
+        segmentElement.classList.add('segment');
+        segmentElement.style.transform = `rotate(${angle}deg) translate(40px, 0)`;
+        const textElement = document.createElement('span');
+        textElement.textContent = segment;
+        segmentElement.appendChild(textElement);
+        wheelElement.appendChild(segmentElement);
+      });
+    }
+
+    createSegments();
+
+    spinButton.addEventListener('click', () => {
+      if (!playerName) {
+        alert('Masukkan nama Anda terlebih dahulu!');
+        return;
+      }
+      if (spinning) return;
+      spinning = true;
+      resultElement.textContent = '';
+
+      const randomSpin = Math.floor(Math.random() * 3600) + 360 * 5;
+      rotation += randomSpin;
+      wheel.style.transform = `rotate(${rotation}deg)`;
+
+      setTimeout(() => {
+        spinning = false;
+        const finalDegree = rotation % 360;
+        const winningSegmentIndex = Math.floor((360 - finalDegree) / degreesPerSegment) % segmentCount;
+        const winningSegment = segments[winningSegmentIndex];
+        resultElement.textContent = `RESULT: ${winningSegment === playerName.substring(0, 7) ? `Selamat, ${playerName}! Anda mendapatkan hadiah!` : `RESULT: ${winningSegment}`}`;
+      }, 3300);
+    });
+  </script>
+
+</body>
+</html>

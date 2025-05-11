@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cek Khodam</title>
+    <meta name="google-site-verification" content="_9f2HoaFKqL5OOTl25VwWD4UeeQ2yc912RxuOme94g4" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #111, #1c1c1c);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    h1 span {
+      color: crimson;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      margin-top: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 50px;
+      border: 1px solid crimson;
+      background-color: #222;
+      color: white;
+      font-size: 1em;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 50px;
+      border: none;
+      background-color: crimson;
+      color: white;
+      font-size: 1.1em;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #e60026;
+    }
+
+    .hasil {
+      margin-top: 20px;
+      text-align: center;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cek <span>Khodam</span></h1>
+
+  <div class="card">
+    <input type="text" id="nama" placeholder="Masukkan nama kamu">
+    <button onclick="cekKhodam()">✨ Cek</button>
+    <div class="hasil" id="hasil"></div>
+  </div>
+
+  <script>
+    function cekKhodam() {
+      const nama = document.getElementById('nama').value.trim();
+      const hasil = document.getElementById('hasil');
+      const daftarKhodam = [
+  "taplak meja",
+  "uni bakwan",
+  "masbrewcc",
+  "ban roda",
+  "kuda lumping",
+  "garararam mararam madudung",
+  "tung tung tung sahur",
+  "anomali",
+  "buaya darat",
+  "putri agung",
+  "samid",
+  "jelek lu ga punya khodam",
+  "sugiono",
+  "hanoman",
+  "nyi roro handap",
+  "nyi roro tengah",
+  "nyi roro luhur",
+  "mas amba",
+  "ambatukam",
+  "kucing ngeong",
+  "anjing guguk",
+  "bebek ngegos",
+  "khodam abal-abal",
+  "sugiono junior",
+  "pocong junior",
+  "kuntilanak cantik",
+  "pocong gantung",
+  "sundel bolong",
+  "kuntilanak ngepet",
+  "genderuwo ngejr contention",
+  // Tambahan Lucu
+  "sendal jepit bolong",
+  "nasi goreng basi",
+  "cicak kejepit pintu",
+  "ketombe badai",
+  "warkop tutup",
+  "wifi tetangga lemot",
+  "dompet ketinggalan",
+  "alarm kesiangan",
+  "baterai hp lowbat",
+  "lupa naruh kunci",
+  "tukang parkir galak",
+  "ojol nyasar",
+  "kucing oyen bar-bar",
+  "indomie kurang bumbu",
+  "teh anget kurang gula",
+  // Tambahan Seram
+  "bayangan tanpa tuan",
+  "bisikan di kegelapan",
+  "jejak kaki di loteng",
+  "bau anyir tengah malam",
+  "tangisan tanpa wujud",
+  "ketukan pintu tak berbalas",
+  "sosok di ujung lorong",
+  "mata merah di balik jendela",
+  "suara gesekan di dinding",
+  "angin dingin tanpa sebab",
+  "mimpi yang jadi nyata",
+  "senyuman yang menghantui",
+  "lilitan tak terlihat",
+  "napas di belakang telinga",
+  "cermin yang memanggil nama",
+  "patung yang bergerak sendiri",
+];
+
+      if (!nama) {
+        hasil.textContent = "Masukkan nama terlebih dahulu!";
+        return;
+      }
+
+      const khodam = daftarKhodam[Math.floor(Math.random() * daftarKhodam.length)];
+      hasil.textContent = `Nama: ${nama}\n\nKhodam Anda: ${khodam}`;
+    }
+  </script>
+</body>
+</html>

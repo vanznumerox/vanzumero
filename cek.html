@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cek Sesuatu Vanz Numero</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 15px;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    h1 span {
+      color: #ff2e63;
+    }
+
+    .container {
+      background: #1e1e1e;
+      padding: 25px;
+      border-radius: 20px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 0 10px rgba(255, 46, 99, 0.4);
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 15px;
+      border: 2px solid #ff2e63;
+      background-color: #111;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      background: #ff2e63;
+      color: white;
+      border-radius: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .button-group {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    button.cektype {
+      background: #222;
+      border: 2px solid #ff2e63;
+      color: #ff2e63;
+      border-radius: 12px;
+      padding: 8px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button.cektype:hover {
+      background: #ff2e63;
+      color: #fff;
+    }
+
+    .hasil {
+      margin-top: 25px;
+      font-size: 18px;
+      background: #111;
+      padding: 15px;
+      border-radius: 15px;
+      border-left: 5px solid #ff2e63;
+    }
+  </style>
+</head>
+<body>
+  <h1><span>Cek</span> Lainnya</h1>
+  <div class="container">
+    <input type="text" id="nama" placeholder="Masukkan nama kamu" />
+    <div class="button-group" id="buttonGroup">
+      <!-- Tombol cek akan di-generate via JS -->
+    </div>
+    <div class="hasil" id="hasil"></div>
+  </div>
+
+  <script>
+    const fitur = {
+      cekkodam: "🔮",
+      cekganteng: "😎",
+      cekcantik: "💃",
+      cektengil: "😏",
+      cekbau: "💩",
+      cekkepintaran: "🧠",
+      cekkebodohan: "🫠",
+      cektolol: "🤡",
+      cekmanis: "🍭",
+      cekbucin: "❤️‍🔥",
+      cektoxic: "☣️",
+      cekmesum: "🔞",
+      cekmiskin: "🥲",
+      cekkaya: "💰",
+      cekpsikopat: "🧨",
+      cekiq: "📊",
+      cekjodoh: "💘",
+      cekhargadiri: "🏷️",
+      cektakut: "😱",
+      cekmalas: "🛌",
+      cekgabut: "🌀",
+      ceksantai: "☕",
+      cekgalak: "🐯",
+      ceknakal: "😈",
+      ceknafsu: "🔥",
+      cekreceh: "🪙"
+    };
+
+    const group = document.getElementById("buttonGroup");
+    const hasil = document.getElementById("hasil");
+
+    Object.keys(fitur).forEach(key => {
+      const btn = document.createElement("button");
+      btn.textContent = `${fitur[key]} ${key.replace("cek", "Cek ")}`;
+      btn.className = "cektype";
+      btn.onclick = () => {
+        const nama = document.getElementById("nama").value || "Kamu";
+        const persen = Math.floor(Math.random() * 101);
+        hasil.textContent = `${fitur[key]} ${nama} memiliki tingkat ${key.replace("cek", "")} sebesar ${persen}%`;
+      };
+      group.appendChild(btn);
+    });
+  </script>
+</body>
+</html>

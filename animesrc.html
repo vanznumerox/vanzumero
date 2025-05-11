@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pencarian Anime</title>
+    <style>
+        body {
+            font-family: monospace;
+            background-color: #000;
+            color: #00ff00;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px #00ff00;
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #111;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #222;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: monospace;
+        }
+        button:hover {
+            background-color: #333;
+        }
+        #results-container {
+            margin-top: 20px;
+            border: 1px dashed #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .anime-item {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dotted #00ff00;
+        }
+        .anime-item:last-child {
+            border-bottom: none;
+        }
+        .anime-title {
+            font-weight: bold;
+            color: #00ffff;
+        }
+        .anime-rating {
+            color: #ffff00;
+        }
+        .anime-link a {
+            color: #00ff00;
+            text-decoration: none;
+        }
+        .anime-link a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: #ff0000;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .loading-indicator {
+            color: #00ff00;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><span style="color: #ff00ff;">[</span><span style="color: #00ffff;">ANIME</span> <span style="color: #ffff00;">SEARCHER</span><span style="color: #ff00ff;">]</span></h1>
+        <input type="text" id="searchInput" placeholder="Masukkan judul anime...">
+        <button onclick="searchAnime()">SCAN</button>
+        <div id="results-container">
+            <p class="loading-indicator" style="display: none;">Mencari data...</p>
+            <p class="error-message" style="display: none;">Terjadi kesalahan saat mengambil data.</p>
+            <p id="no-results" style="display: none;">Anime tidak ditemukan!</p>
+            <ul id="anime-list"></ul>
+        </div>
+    </div>
+
+    <script>
+        async function searchAnime() {
+            const text = document.getElementById('searchInput').value.trim();
+            if (!text) {
+                alert('⚠️ Masukkan judul anime yang ingin dicari!');
+                return;
+            }
+
+            document.getElementById('results-container').style.display = 'block';
+            document.getElementById('anime-list').innerHTML = '';
+            document.getElementById('no-results').style.display = 'none';
+            document.querySelector('.error-message').style.display = 'none';
+            document.querySelector('.loading-indicator').style.display = 'block';
+
+            try {
+                const url = `https://asepharyana.cloud/api/anime2/search?q=${encodeURIComponent(text)}`;
+                const response = await fetch(url);
+                const json = await response.json();
+
+                document.querySelector('.loading-indicator').style.display = 'none';
+
+                if (!json || json.status !== "Ok" || !json.data.length) {
+                    document.getElementById('no-results').style.display = 'block';
+                    return;
+                }
+
+                const results = json.data.map(anime => ({
+                    title: anime.title,
+                    slug: anime.slug,
+                    poster: anime.poster,
+                    description: anime.description,
+                    anime_url: anime.anime_url,
+                    rating: anime.rating,
+                    type: anime.type
+                }));
+
+                let html = '';
+                for (const anime of results) {
+                    html += `<li class="anime-item">`;
+                    html += `<strong class="anime-title">${anime.title}</strong> (${anime.type})<br>`;
+                    html += `⭐ Rating: <span class="anime-rating">${anime.rating}</span><br>`;
+                    html += `<span class="anime-link"><a href="${anime.anime_url}" target="_blank">LIHAT</a></span>`;
+                    html += `</li>`;
+                }
+                document.getElementById('anime-list').innerHTML = html;
+
+            } catch (error) {
+                console.error('❌ Error:', error);
+                document.querySelector('.loading-indicator').style.display = 'none';
+                document.querySelector('.error-message').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

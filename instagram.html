@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengunduh Instagram Keren</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result-container {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .result-container img, .result-container video {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Unduh Media Instagram</h1>
+        <input type="text" id="instagramUrl" placeholder="Masukkan URL Instagram">
+        <button onclick="downloadMedia()">Unduh</button>
+        <div id="result" class="result-container" style="display: none;">
+            <h2>Hasil Unduhan:</h2>
+            <div id="media-output"></div>
+            <p id="success-message" style="color: green; display: none;">Berhasil diunduh!</p>
+            <p id="error-message" class="error-message" style="display: none;">Maaf, gagal mengunduh.</p>
+        </div>
+    </div>
+
+    <script>
+        async function downloadMedia() {
+            const url = document.getElementById('instagramUrl').value;
+            const resultContainer = document.getElementById('result');
+            const mediaOutput = document.getElementById('media-output');
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
+
+            if (!url) {
+                alert('Mana Link Nya Tolol'); // Tetap menggunakan gaya bahasa Anda
+                return;
+            }
+
+            // Simulasi pemanggilan fungsi igdl dan axios (di sisi server)
+            // Dalam implementasi nyata, Anda akan mengirim 'url' ke server dan menerima hasilnya.
+            // Di sini, kita akan membuat data simulasi.
+            const simulatedResponse = await simulateIgdl(url);
+
+            resultContainer.style.display = 'block';
+            mediaOutput.innerHTML = '';
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+
+            if (simulatedResponse && simulatedResponse.url) {
+                const contentType = simulatedResponse.contentType;
+                if (contentType.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = simulatedResponse.url;
+                    mediaOutput.appendChild(img);
+                } else if (contentType.startsWith('video/')) {
+                    const video = document.createElement('video');
+                    video.src = simulatedResponse.url;
+                    video.controls = true;
+                    mediaOutput.appendChild(video);
+                }
+                successMessage.style.display = 'block';
+            } else {
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        // Fungsi simulasi untuk igdl dan axios.head
+        async function simulateIgdl(url) {
+            // Ini hanya simulasi. Dalam aplikasi nyata, ini akan terjadi di server.
+            console.log(`Simulating igdl for URL: ${url}`);
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Menunggu sebentar untuk simulasi
+
+            // Contoh data respons simulasi (bisa berupa gambar atau video)
+            const random = Math.random();
+            if (random < 0.5) {
+                return { url: 'https://via.placeholder.com/400', contentType: 'image/jpeg' };
+            } else {
+                return { url: 'https://sample-videos.com/video123/mp4/480/big_buck_bunny_480p_h264.mp4', contentType: 'video/mp4' };
+            }
+        }
+    </script>
+</body>
+</html>

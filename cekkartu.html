@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informasi Kartu</title>
+    <meta name="google-site-verification" content="_9f2HoaFKqL5OOTl25VwWD4UeeQ2yc912RxuOme94g4" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #ecf0f1; /* Light Gray */
+            color: #34495e; /* Dark Blue Gray */
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            width: 95%;
+            max-width: 600px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50; /* Dark Blue */
+            margin-bottom: 35px;
+            font-size: 2.5em;
+            font-weight: 500;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 30px;
+        }
+        label {
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #34495e; /* Dark Blue Gray */
+            font-size: 1.1em;
+        }
+        input[type="tel"] {
+            padding: 15px;
+            border: 1px solid #d1d8e0; /* Light Gray Blue */
+            border-radius: 8px;
+            font-size: 1.1em;
+            color: #333;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db; /* Blue */
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #2980b9; /* Darker Blue */
+            transform: translateY(-2px);
+        }
+        #result-container {
+            margin-top: 40px;
+            padding: 30px;
+            border: 1px solid #e0e6ed; /* Light Gray Blue */
+            border-radius: 10px;
+            background-color: #f9fafa; /* Very Light Gray */
+        }
+        #result-container.hidden {
+            display: none;
+        }
+        #result-container h2 {
+            color: #2c3e50; /* Dark Blue */
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2em;
+            font-weight: 500;
+        }
+        #result-container p {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        strong {
+            font-weight: bold;
+            color: #34495e; /* Dark Blue Gray */
+        }
+        .additional-info {
+            margin-top: 30px;
+            text-align: center;
+            color: #777;
+            font-size: 0.9em;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: bold;
+            color: white;
+            margin-left: 8px;
+        }
+        .status-success {
+            background-color: #27ae60; /* Green */
+        }
+        .status-warning {
+            background-color: #f39c12; /* Orange */
+        }
+        .status-info {
+            background-color: #3498db; /* Blue */
+        }
+        .status-danger {
+            background-color: #e74c3c; /* Red */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Informasi Kartu</h1>
+        <div class="input-group">
+            <label for="nomor-telepon">Nomor Telepon:</label>
+            <input type="tel" id="nomor-telepon" placeholder="Masukkan nomor telepon">
+        </div>
+        <button id="cek-button">Cek Informasi</button>
+        <div id="result-container" class="hidden">
+            <h2>Detail Kartu</h2>
+            <p><strong>Operator:</strong> <span id="operator"></span></p>
+            <p><strong>Jumlah Digit:</strong> <span id="jumlah-digit"></span> digit</p>
+            <p><strong>Kode Negara:</strong> <span id="kode-negara"></span></p>
+            <p><strong>Jenis Kartu:</strong> <span id="jenis-kartu">-</span></p>
+            <p><strong>Status:</strong> <span id="status-kartu" class="status-info">Diperkirakan Aktif</span></p>
+            <p><strong>Sinyal:</strong> <span id="sinyal">Mungkin 4G/LTE (berdasarkan operator)</span></p>
+            <p><strong>Kekuatan Jaringan:</strong> <span id="kekuatan-jaringan">Baik (estimasi)</span></p>
+            <p><strong>Informasi Tambahan:</strong> <span id="informasi-tambahan">Informasi ini bersifat perkiraan berdasarkan nomor telepon.</span></p>
+        </div>
+        <p class="additional-info">Informasi lebih lanjut mengenai status aktif kartu memerlukan verifikasi dari operator terkait.</p>
+    </div>
+
+    <script>
+        const nomorTeleponInput = document.getElementById('nomor-telepon');
+        const cekButton = document.getElementById('cek-button');
+        const resultContainer = document.getElementById('result-container');
+        const operatorSpan = document.getElementById('operator');
+        const jumlahDigitSpan = document.getElementById('jumlah-digit');
+        const kodeNegaraSpan = document.getElementById('kode-negara');
+        const jenisKartuSpan = document.getElementById('jenis-kartu');
+        const statusKartuSpan = document.getElementById('status-kartu');
+        const sinyalSpan = document.getElementById('sinyal');
+        const kekuatanJaringanSpan = document.getElementById('kekuatan-jaringan');
+        const informasiTambahanSpan = document.getElementById('informasi-tambahan');
+
+        cekButton.addEventListener('click', () => {
+            const nomor = nomorTeleponInput.value.trim();
+            if (!nomor) {
+                alert('Masukkan nomor telepon!');
+                return;
+            }
+
+            let kodeNegara = '';
+            let jumlahDigit = nomor.length;
+            let nomorUntukDicek = nomor;
+            let perkiraanSinyal = 'Tidak Diketahui';
+            let perkiraanKekuatanJaringan = 'Tidak Diketahui';
+            let jenisKartu = '-';
+
+            if (nomor.startsWith('+62')) {
+                kodeNegara = '+62 (Indonesia)';
+                nomorUntukDicek = nomor.substring(3); // Hapus '+62'
+            } else if (nomor.startsWith('08')) {
+                kodeNegara = '+62 (Indonesia)';
+            }
+
+            let prefix = nomorUntukDicek.substring(0, 4);
+            let operator = 'Tidak diketahui';
+
+            if (prefix === '0811' || prefix === '0812' || prefix === '0813' || prefix === '0821' || prefix === '0822' || prefix === '0823') {
+                operator = 'Telkomsel';
+                perkiraanSinyal = 'Mungkin 4G/LTE';
+                perkiraanKekuatanJaringan = 'Baik';
+                jenisKartu = 'Pascabayar/Prabayar';
+            } else if (prefix === '0852' || prefix === '0853' || prefix === '0814') {
+                operator = 'Indosat';
+                perkiraanSinyal = 'Mungkin 4G/LTE';
+                perkiraanKekuatanJaringan = 'Baik';
+                jenisKartu = 'Pascabayar/Prabayar';
+            } else if (prefix === '0831' || prefix === '0832' || prefix === '0833' || prefix === '0838') {
+                operator = 'Axis';
+                perkiraanSinyal = 'Mungkin 4G/LTE';
+                perkiraanKekuatanJaringan = 'Sedang';
+                jenisKartu = 'Prabayar';
+            } else if (prefix === '0895' || prefix === '0896' || prefix === '0897' || prefix === '0898' || prefix === '0899') {
+                operator = 'Smartfren';
+                perkiraanSinyal = 'Mungkin 4G/LTE';
+                perkiraanKekuatanJaringan = 'Baik';
+                jenisKartu = 'Prabayar';
+            } else if (prefix === '0877' || prefix === '0878' || prefix === '0879') {
+                operator = 'XL';
+                perkiraanSinyal = 'Mungkin 4G/LTE';
+                perkiraanKekuatanJaringan = 'Baik';
+                jenisKartu = 'Pascabayar/Prabayar';
+            }
+
+            operatorSpan.textContent = operator;
+            jumlahDigitSpan.textContent = jumlahDigit;
+            kodeNegaraSpan.textContent = kodeNegara;
+            jenisKartuSpan.textContent = jenisKartu;
+            sinyalSpan.textContent = perkiraanSinyal;
+            kekuatanJaringanSpan.textContent = perkiraanKekuatanJaringan;
+            informasiTambahanSpan.textContent = 'Informasi ini bersifat perkiraan berdasarkan nomor telepon.';
+            resultContainer.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>

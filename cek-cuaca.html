@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Cek Cuaca - Vanz Numero</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font yang lebih modern */
+      margin: 0; /* Menghilangkan margin default body */
+      padding: 0; /* Menghilangkan padding default body */
+      background: linear-gradient(135deg, #6dd5ed, #2193b0); /* Gradien diagonal yang lebih menarik */
+      color: #fff; /* Teks putih untuk kontras yang baik dengan background */
+      display: flex; /* Menggunakan flexbox untuk tata letak yang lebih mudah diatur */
+      justify-content: center; /* Tengah horizontal */
+      align-items: center; /* Tengah vertikal */
+      min-height: 100vh; /* Memastikan body memenuhi tinggi viewport */
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.1); /* Background container semi-transparan */
+      border-radius: 15px; /* Sudut membulat yang lebih besar */
+      padding: 40px; /* Padding lebih besar */
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* Efek bayangan yang lebih halus */
+      text-align: center; /* Teks di dalam container menjadi tengah */
+      backdrop-filter: blur(10px); /* Efek blur pada background di belakang container */
+      border: 1px solid rgba(255, 255, 255, 0.3); /* Border tipis semi-transparan */
+    }
+    h2 {
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* Efek bayangan teks yang lebih kuat */
+      margin-bottom: 20px; /* Memberi jarak dengan elemen di bawahnya */
+      font-size: 2.5em; /* Ukuran font yang lebih besar */
+    }
+    input, button {
+      padding: 12px 18px; /* Padding yang lebih proporsional */
+      font-size: 1em; /* Ukuran font yang lebih baik */
+      margin-top: 15px; /* Margin atas yang lebih besar */
+      border-radius: 10px; /* Sudut membulat yang lebih halus */
+      border: none; /* Menghilangkan border default */
+      outline: none; /* Menghilangkan outline saat fokus */
+    }
+    input {
+      width: calc(70% - 20px); /* Lebar input dengan memperhitungkan padding */
+      color: #333; /* Warna teks input */
+    }
+    button {
+      background-color: #00c3ff; /* Warna biru yang lebih cerah */
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease; /* Efek transisi hover */
+    }
+    button:hover {
+      background-color: #0097e6; /* Warna biru lebih gelap saat hover */
+    }
+    .hasil {
+      background: rgba(255, 255, 255, 0.2); /* Background hasil semi-transparan */
+      margin-top: 30px; /* Margin atas yang lebih besar */
+      padding: 30px; /* Padding yang lebih besar */
+      border-radius: 15px; /* Sudut membulat yang lebih besar */
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15); /* Efek bayangan yang lebih halus */
+      text-align: left; /* Teks hasil rata kiri untuk keterbacaan */
+      backdrop-filter: blur(10px); /* Efek blur pada background di belakang hasil */
+      border: 1px solid rgba(255, 255, 255, 0.3); /* Border tipis semi-transparan */
+    }
+    .hasil h3 {
+      color: #fff;
+      margin-top: 0; /* Menghilangkan margin atas default h3 */
+      margin-bottom: 10px; /* Memberi jarak dengan paragraf di bawahnya */
+      font-size: 1.8em; /* Ukuran font yang lebih besar */
+    }
+    .hasil p {
+      color: #eee; /* Warna teks paragraf yang lebih lembut */
+      margin-bottom: 8px; /* Memberi jarak antar paragraf */
+    }
+    .hasil strong {
+      color: #fff; /* Warna teks bold yang lebih menonjol */
+    }
+    .hasil img {
+      width: 80px; /* Ukuran ikon cuaca */
+      height: 80px;
+      margin-top: 10px; /* Memberi jarak dengan teks di atasnya */
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Cek Cuaca Lokasi</h2>
+  <input type="text" id="lokasi" placeholder="Masukkan nama kota...">
+  <button onclick="cekCuaca()">Cari</button>
+
+  <div id="hasil" class="hasil"></div>
+</div>
+
+<script>
+async function cekCuaca() {
+  const lokasi = document.getElementById("lokasi").value;
+  const apiKey = "be8df0c461f6426ead983032251304";
+
+  const res = await fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lokasi}&lang=id`);
+  const data = await res.json();
+
+  if (data.error) {
+    document.getElementById("hasil").innerHTML = `<p style="color: #ffdddd;">Gagal mendapatkan cuaca: ${data.error.message}</p>`;
+    return;
+  }
+
+  const info = `
+    <h3>${data.location.name}, ${data.location.region}, ${data.location.country}</h3>
+    <p><strong>Cuaca:</strong> ${data.current.condition.text}</p>
+    <p><strong>Suhu:</strong> ${data.current.temp_c}°C</p>
+    <p><strong>Kelembaban:</strong> ${data.current.humidity}%</p>
+    <p><strong>Angin:</strong> ${data.current.wind_kph} km/jam</p>
+    <p><strong>Terakhir diperbarui:</strong> ${data.current.last_updated}</p>
+    <img src="${data.current.condition.icon}" alt="icon">
+  `;
+
+  document.getElementById("hasil").innerHTML = info;
+}
+</script>
+
+</body>
+</html>

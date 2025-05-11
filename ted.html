@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Games: Cyber Edition</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #00ff00;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #00ff00;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px #00ff00;
+        }
+        .menu-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .menu-button {
+            background-color: transparent;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: background-color 0.3s ease;
+        }
+        .menu-button:hover {
+            background-color: rgba(0, 255, 0, 0.1);
+        }
+        .game-container {
+            border: 1px solid #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+            display: none; /* Initially hidden */
+        }
+        #tebakkimia-game.active,
+        #asahotak-game.active,
+        #siapaaku-game.active,
+        #susunkata-game.active,
+        #tekateki-game.active,
+        #tebakbendera2-game.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        #question-container {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        input[type="text"] {
+            background-color: #000;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 8px;
+            margin-right: 10px;
+            font-family: 'Courier New', monospace;
+        }
+        button {
+            background-color: transparent;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: rgba(0, 255, 0, 0.1);
+        }
+        #result-container {
+            margin-top: 15px;
+            font-weight: bold;
+            text-shadow: 0 0 3px #00ff00;
+        }
+        .timer {
+            font-size: 1.2em;
+            color: #00ffff;
+            margin-top: 10px;
+            text-shadow: 0 0 3px #00ffff;
+        }
+        #tebakbendera2-image {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 10px;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1><span style="color: #ff00ff;">C</span><span style="color: #00ff00;">y</span><span style="color: #00ffff;">b</span><span style="color: #ffff00;">e</span><span style="color: #ff0000;">r</span> <span style="color: #00ff00;">M</span><span style="color: #00ffff;">i</span><span style="color: #ffff00;">n</span><span style="color: #ff0000;">i</span> <span style="color: #00ff00;">G</span><span style="color: #00ffff;">a</span><span style="color: #ffff00;">m</span><span style="color: #ff0000;">e</span><span style="color: #00ff00;">s</span></h1>
+
+    <div class="menu-container" id="game-menu">
+        <button class="menu-button" onclick="showGame('tebakkimia')">><span style="color: #ffff00;"> Initiate</span> Tebak Kimia</button>
+        <button class="menu-button" onclick="showGame('asahotak')">><span style="color: #00ffff;"> Execute</span> Asah Otak</button>
+        <button class="menu-button" onclick="showGame('siapaaku')">><span style="color: #00ff00;"> Access</span> Siapakah Aku?</button>
+        <button class="menu-button" onclick="showGame('susunkata')">><span style="color: #ff00ff;"> Decrypt</span> Susun Kata</button>
+        <button class="menu-button" onclick="showGame('tekateki')">><span style="color: #ffff00;"> Resolve</span> Teka-Teki</button>
+        <button class="menu-button" onclick="showGame('tebakbendera2')">><span style="color: #00ffff;"> Identify</span> Tebak Bendera</button>
+    </div>
+
+    <div id="tebakkimia-game" class="game-container">
+        <h2>Tebak Kimia</h2>
+        <div id="tebakkimia-question-container"></div>
+        <input type="text" id="tebakkimia-answer-input" placeholder="> Enter Symbol">
+        <button onclick="checkTebakKimia()">> Process</button>
+        <div id="tebakkimia-result-container"></div>
+        <div id="tebakkimia-timer" class="timer"></div>
+    </div>
+
+    <div id="asahotak-game" class="game-container">
+        <h2>Asah Otak</h2>
+        <div id="asahotak-question-container"></div>
+        <input type="text" id="asahotak-answer-input" placeholder="> Input Answer">
+        <button onclick="checkAsahOtak()">> Verify</button>
+        <div id="asahotak-result-container"></div>
+        <div id="asahotak-timer" class="timer"></div>
+    </div>
+
+    <div id="siapaaku-game" class="game-container">
+        <h2>Siapakah Aku?</h2>
+        <div id="siapaaku-question-container"></div>
+        <input type="text" id="siapaaku-answer-input" placeholder="> Analyze & Respond">
+        <button onclick="checkSiapaAku()">> Confirm</button>
+        <div id="siapaaku-result-container"></div>
+        <div id="siapaaku-timer" class="timer"></div>
+    </div>
+
+    <div id="susunkata-game" class="game-container">
+        <h2>Susun Kata</h2>
+        <div id="susunkata-question-container"></div>
+        <input type="text" id="susunkata-answer-input" placeholder="> Reconstruct Word">
+        <button onclick="checkSusunKata()">> Submit</button>
+        <div id="susunkata-result-container"></div>
+        <div id="susunkata-timer" class="timer"></div>
+    </div>
+
+    <div id="tekateki-game" class="game-container">
+        <h2>Teka-Teki</h2>
+        <div id="tekateki-question-container"></div>
+        <input type="text" id="tekateki-answer-input" placeholder="> Decipher Solution">
+        <button onclick="checkTekaTeki()">> Unlock</button>
+        <div id="tekateki-result-container"></div>
+        <div id="tekateki-timer" class="timer"></div>
+    </div>
+
+    <div id="tebakbendera2-game" class="game-container">
+        <h2>Tebak Bendera</h2>
+        <div id="tebakbendera2-question-container"></div>
+        <img id="tebakbendera2-image" src="" alt="Bendera">
+        <input type="text" id="tebakbendera2-answer-input" placeholder="> Identify Nation">
+        <button onclick="checkTebakBendera2()">> Match</button>
+        <div id="tebakbendera2-result-container"></div>
+        <div id="tebakbendera2-timer" class="timer"></div>
+    </div>
+
+    <script>
+        let tebakkimiaData;
+        let asahotakData;
+        let siapaakuData;
+        let susunkataData;
+        let tekatekiData;
+        let tebakbendera2Data;
+
+        let currentGame = {};
+        let timerInterval;
+        let activeGameId = null;
+
+        function showGame(gameId) {
+            if (activeGameId) {
+                document.getElementById(activeGameId + '-game').classList.remove('active');
+            }
+            document.getElementById('game-menu').style.display = 'none';
+            document.getElementById(gameId + '-game').classList.add('active');
+            activeGameId = gameId;
+            startGame(gameId);
+        }
+
+        async function fetchGameData() {
+            const tebakkimiaResponse = await fetch('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakkimia.json');
+            tebakkimiaData = await tebakkimiaResponse.json();
+
+            const asahotakResponse = await fetch('https://raw.githubusercontent.com/BochilTeam/database/master/games/asahotak.json');
+            asahotakData = await asahotakResponse.json();
+
+            const siapaakuResponse = await fetch('https://raw.githubusercontent.com/BochilTeam/database/master/games/siapakahaku.json');
+            siapaakuData = await siapaakuResponse.json();
+
+            const susunkataResponse = await fetch('https://raw.githubusercontent.com/BochilTeam/database/master/games/susunkata.json');
+            susunkataData = await susunkataResponse.json();
+
+            const tekatekiResponse = await fetch('https://raw.githubusercontent.com/BochilTeam/database/master/games/tekateki.json');
+            tekatekiData = await tekatekiResponse.json();
+
+            const tebakbendera2Response = await fetch('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakbendera2.json');
+            tebakbendera2Data = await tebakbendera2Response.json();
+        }
+
+        function startGame(gameId) {
+            const gameData = getGameData(gameId);
+            if (!gameData || gameData.length === 0) {
+                document.getElementById(`${gameId}-question-container`).innerText = "> Error: Data not found.";
+                return;
+            }
+
+            const randomIndex = Math.floor(Math.random() * gameData.length);
+            const currentQuestion = gameData[randomIndex];
+
+            currentGame[gameId] = {
+                question: currentQuestion,
+                answer: currentQuestion.lambang ? currentQuestion.lambang.toLowerCase() : currentQuestion.jawaban ? currentQuestion.jawaban.toLowerCase() : currentQuestion.name ? currentQuestion.name.toLowerCase() : '',
+                timer: 60,
+                timerDisplay: document.getElementById(`${gameId}-timer`),
+                resultDisplay: document.getElementById(`${gameId}-result-container`),
+                inputField: document.getElementById(`${gameId}-answer-input`),
+                questionDisplay: document.getElementById(`${gameId}-question-container`),
+                imageDisplay: document.getElementById(`${gameId}-image`)
+            };
+
+            if (currentGame[gameId].imageDisplay && currentQuestion.img) {
+                currentGame[gameId].imageDisplay.src = currentQuestion.img;
+            } else if (currentGame[gameId].questionDisplay) {
+                const questionText = currentQuestion.unsur || currentQuestion.soal || currentQuestion.soal;
+                currentGame[gameId].questionDisplay.innerText = "> Question: " + questionText;
+            }
+
+            startTimer(gameId);
+        }
+
+        function getGameData(gameId) {
+            switch (gameId) {
+                case 'tebakkimia':
+                    return tebakkimiaData;
+                case 'asahotak':
+                    return asahotakData;
+                case 'siapaaku':
+                    return siapaakuData;
+                case 'susunkata':
+                    return susunkataData;
+                case 'tekateki':
+                    return tekatekiData;
+                case 'tebakbendera2':
+                    return tebakbendera2Data;
+                default:
+                    return null;
+            }
+        }
+
+        function startTimer(gameId) {
+            if (timerInterval) {
+                clearInterval(timerInterval); // Clear any existing timer
+            }
+            if (!currentGame[gameId]) return;
+            currentGame[gameId].timer = 60;
+            updateTimerDisplay(gameId);
+            timerInterval = setInterval(() => {
+                currentGame[gameId].timer--;
+                updateTimerDisplay(gameId);
+                if (currentGame[gameId].timer <= 0) {
+                    clearInterval(timerInterval);
+                    showTimeoutResult(gameId);
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay(gameId) {
+            if (currentGame[gameId] && currentGame[gameId].timerDisplay) {
+                currentGame[gameId].timerDisplay.innerText = "> Time Remaining: " + currentGame[gameId].timer + " sec";
+            }
+        }
+
+        function showTimeoutResult(gameId) {
+            if (currentGame[gameId] && currentGame[gameId].resultDisplay) {
+                currentGame[gameId].resultDisplay.innerText = "> TimeOut! Answer: " + currentGame[gameId].answer;
+                currentGame[gameId].inputField.disabled = true;
+            }
+            setTimeout(() => {
+                startGame(gameId);
+                if (currentGame[gameId]) {
+                    currentGame[gameId].inputField.disabled = false;
+                    currentGame[gameId].resultDisplay.innerText = '';
+                    currentGame[gameId].inputField.value = '';
+                }
+            }, 3000);
+        }
+
+        function checkAnswer(gameId) {
+            if (!currentGame[gameId]) return;
+            const userAnswer = currentGame[gameId].inputField.value.toLowerCase().trim();
+            if (userAnswer === currentGame[gameId].answer) {
+                clearInterval(timerInterval);
+                currentGame[gameId].resultDisplay.innerText = "> Access Granted: Correct!";
+                setTimeout(() => {
+                    startGame(gameId);
+                    currentGame[gameId].inputField.value = '';
+                    currentGame[gameId].inputField.disabled = false;
+                    currentGame[gameId].resultDisplay.innerText = '';
+                }, 2000);
+            } else {
+                currentGame[gameId].resultDisplay.innerText = "> Access Denied: Incorrect!";
+            }
+        }
+
+        function checkTebakKimia() {
+            checkAnswer('tebakkimia');
+        }
+
+        function checkAsahOtak() {
+            checkAnswer('asahotak');
+        }
+
+        function checkSiapaAku() {
+            checkAnswer('siapaaku');
+        }
+
+        function checkSusunKata() {
+            checkAnswer('susunkata');
+        }
+
+        function checkTekaTeki() {
+            checkAnswer('tekateki');
+        }
+
+        function checkTebakBendera2() {
+            checkAnswer('tebakbendera2');
+        }
+
+        fetchGameData().then(() => {
+            // Optionally, you can decide to show a default game on initial load
+            // showGame('tebakkimia');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YTMP3 Downloader</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        .select-group {
+            margin-bottom: 20px;
+        }
+
+        select {
+            width: calc(100% - 20px);
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            box-sizing: border-box;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="currentColor" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position-x: 95%;
+            background-position-y: center;
+            padding-right: 24px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .download-info {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+            text-align: left;
+        }
+
+        .download-info h2 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .download-info p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .error-message {
+            color: #dc3545;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .loading-message {
+            color: #28a745;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YTMP3 Downloader</h1>
+        <div class="input-group">
+            <label for="youtubeLink">Link YouTube:</label>
+            <input type="text" id="youtubeLink" placeholder="Masukkan link YouTube di sini">
+        </div>
+        <div class="select-group">
+            <label for="quality">Pilih Kualitas Audio:</label>
+            <select id="quality">
+                <option value="64kbps">64kbps</option>
+                <option value="128kbps">128kbps</option>
+                <option value="192kbps">192kbps</option>
+                <option value="256kbps">256kbps</option>
+                <option value="320kbps">320kbps</option>
+            </select>
+        </div>
+        <button onclick="downloadAudio()">Download MP3</button>
+
+        <div id="downloadInfo" class="download-info" style="display: none;">
+            <h2>Informasi Download</h2>
+            <p id="title"></p>
+            <p id="duration"></p>
+            <p id="channel"></p>
+            <p id="uploadDate"></p>
+            <p id="audioQuality"></p>
+            <p id="downloadLink"></p>
+        </div>
+
+        <p id="errorMessage" class="error-message" style="display: none;"></p>
+        <p id="loadingMessage" class="loading-message" style="display: none;">Sedang memproses...</p>
+    </div>
+
+    <script>
+        async function downloadAudio() {
+            const link = document.getElementById('youtubeLink').value;
+            const quality = document.getElementById('quality').value;
+            const downloadInfoDiv = document.getElementById('downloadInfo');
+            const errorMessage = document.getElementById('errorMessage');
+            const loadingMessage = document.getElementById('loadingMessage');
+
+            if (!link.includes("youtube.com") && !link.includes("youtu.be")) {
+                errorMessage.textContent = "Masukin link YouTube yang valid!";
+                errorMessage.style.display = 'block';
+                downloadInfoDiv.style.display = 'none';
+                loadingMessage.style.display = 'none';
+                return;
+            }
+
+            errorMessage.style.display = 'none';
+            loadingMessage.style.display = 'block';
+            downloadInfoDiv.style.display = 'none';
+
+            const apiUrl = `https://fastrestapis.fasturl.cloud/downup/ytmp3?url=${encodeURIComponent(link)}&quality=${quality}&server=auto`;
+
+            try {
+                const res = await fetch(apiUrl);
+                const data = await res.json();
+
+                if (data.status !== 200) {
+                    errorMessage.textContent = "Gagal mengambil audio. Coba lagi nanti!";
+                    errorMessage.style.display = 'block';
+                    loadingMessage.style.display = 'none';
+                    return;
+                }
+
+                const { title, metadata, author, url, media } = data.result;
+
+                document.getElementById('title').textContent = `Judul: ${title}`;
+                document.getElementById('duration').textContent = `Durasi: ${metadata.duration}`;
+                document.getElementById('channel').textContent = `Channel: ${author.name}`;
+                document.getElementById('uploadDate').textContent = `Upload: ${metadata.uploadDate}`;
+                document.getElementById('audioQuality').textContent = `Kualitas: ${quality}`;
+                document.getElementById('downloadLink').innerHTML = `Link Download: <a href="${media}" target="_blank" rel="noopener noreferrer">Klik di sini</a>`;
+
+                downloadInfoDiv.style.display = 'block';
+                loadingMessage.style.display = 'none';
+
+                // Tidak perlu lagi mengirim pesan terpisah menggunakan Kyyhst.sendMessage
+                // karena kita sudah menampilkan link download di halaman web.
+
+            } catch (e) {
+                console.error(e);
+                errorMessage.textContent = "Terjadi kesalahan, coba lagi nanti!";
+                errorMessage.style.display = 'block';
+                loadingMessage.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

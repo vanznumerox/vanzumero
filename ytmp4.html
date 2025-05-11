@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unduh Video YouTube</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: #777;
+            font-size: 0.9em;
+        }
+
+        .input-section {
+            margin-bottom: 15px;
+        }
+
+        .input-section label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .input-section input[type="text"],
+        .input-section select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #download-link-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #download-link-section h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        #download-link {
+            display: inline-block;
+            background-color: #27ae60;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        #download-link:hover {
+            background-color: #219653;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #777;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Unduh Video YouTube</h1>
+            <p>Unduh video YouTube dengan mudah dalam berbagai kualitas.</p>
+        </header>
+        <main>
+            <div class="input-section">
+                <label for="link">Link YouTube:</label>
+                <input type="text" id="link" placeholder="Masukkan link video YouTube di sini">
+            </div>
+            <div class="input-section">
+                <label for="quality">Kualitas:</label>
+                <select id="quality">
+                    <option value="">Pilih Kualitas</option>
+                    <option value="144p">144p</option>
+                    <option value="240p">240p</option>
+                    <option value="360p">360p</option>
+                    <option value="480p">480p</option>
+                    <option value="720p">720p</option>
+                    <option value="1080p">1080p</option>
+                </select>
+            </div>
+            <button id="download-button">Unduh</button>
+            <div id="status-message" class="hidden"></div>
+            <div id="download-link-section" class="hidden">
+                <h2>Link Download</h2>
+                <a id="download-link" href="#" target="_blank" rel="noopener noreferrer">Unduh Video</a>
+            </div>
+        </main>
+        <footer>
+            <p>&copy; 2025 - Layanan Unduh Video</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const linkInput = document.getElementById('link');
+            const qualitySelect = document.getElementById('quality');
+            const downloadButton = document.getElementById('download-button');
+            const statusMessage = document.getElementById('status-message');
+            const downloadLinkSection = document.getElementById('download-link-section');
+            const downloadLink = document.getElementById('download-link');
+
+            downloadButton.addEventListener('click', async () => {
+                const link = linkInput.value.trim();
+                const quality = qualitySelect.value;
+
+                if (!link) {
+                    statusMessage.textContent = 'Masukan link YouTube yang valid!';
+                    statusMessage.className = 'status-message error';
+                    downloadLinkSection.classList.add('hidden');
+                    return;
+                }
+
+                if (!quality) {
+                    statusMessage.textContent = 'Pilih kualitas video yang diinginkan!';
+                    statusMessage.className = 'status-message warning';
+                    downloadLinkSection.classList.add('hidden');
+                    return;
+                }
+
+                statusMessage.textContent = 'Tunggu sebentar, lagi proses download...';
+                statusMessage.className = 'status-message info';
+                downloadLinkSection.classList.add('hidden');
+
+                const apiUrl = `https://fastrestapis.fasturl.cloud/downup/ytmp4?url=${encodeURIComponent(link)}&quality=${quality}&server=auto`;
+
+                try {
+                    const response = await fetch(apiUrl);
+                    const data = await response.json();
+
+                    if (data.status !== 200) {
+                        statusMessage.textContent = 'Gagal mengambil video. Coba lagi nanti!';
+                        statusMessage.className = 'status-message error';
+                        downloadLinkSection.classList.add('hidden');
+                        return;
+                    }
+
+                    const { title, media } = data.result;
+                    downloadLink.href = media;
+                    downloadLink.download = `${title}.mp4`;
+                    downloadLinkSection.classList.remove('hidden');
+                    statusMessage.textContent = 'Berhasil!';
+                    statusMessage.className = 'status-message success';
+
+                } catch (error) {
+                    console.error(error);
+                    statusMessage.textContent = 'Terjadi kesalahan, coba lagi nanti!';
+                    statusMessage.className = 'status-message error';
+                    downloadLinkSection.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

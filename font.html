@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fancy Text Generator</title>
+    <meta name="google-site-verification" content="_9f2HoaFKqL5OOTl25VwWD4UeeQ2yc912RxuOme94g4" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      padding: 2rem;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      max-width: 600px;
+      padding: 12px;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .output {
+      background: white;
+      margin: 10px auto;
+      padding: 10px;
+      border-radius: 8px;
+      max-width: 600px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+    .output:hover {
+      background-color: #dff9fb;
+    }
+  </style>
+</head>
+<body>
+  <h1>Fancy Text Generator</h1>
+  <input type="text" id="inputText" placeholder="Tulis teks di sini..." oninput="generateFancyText()" />
+  <div id="resultContainer"></div>
+
+  <script>
+    const styles = [
+     
+  { name: "Gothic", fn: t => t.replace(/[a-z]/gi, c => { const offset = c <= 'Z' ? 0x1D56C - 65 : 0x1D586 - 97; return String.fromCharCode(c.charCodeAt(0) + offset); })},
+  { name: "Script", fn: t => t.replace(/[a-z]/gi, c => { const offset = c <= 'Z' ? 0x1D4D4 - 65 : 0x1D4EE - 97; return String.fromCharCode(c.charCodeAt(0) + offset); })},
+  { name: "Bold", fn: t => t.replace(/[a-z]/gi, c => { const offset = c <= 'Z' ? 0x1D400 - 65 : 0x1D41A - 97; return String.fromCharCode(c.charCodeAt(0) + offset); })},
+  { name: "Italic", fn: t => t.replace(/[a-z]/gi, c => { const offset = c <= 'Z' ? 0x1D434 - 65 : 0x1D44E - 97; return String.fromCharCode(c.charCodeAt(0) + offset); })},
+  { name: "Bold Italic", fn: t => t.replace(/[a-z]/gi, c => { const offset = c <= 'Z' ? 0x1D468 - 65 : 0x1D482 - 97; return String.fromCharCode(c.charCodeAt(0) + offset); })},
+  { name: "Sans Serif", fn: t => t.replace(/[a-z]/gi, c => { const offset = c <= 'Z' ? 0x1D5A0 - 65 : 0x1D5BA - 97; return String.fromCharCode(c.charCodeAt(0) + offset); })},
+  { name: "Sans Serif Bold", fn: t => t.replace(/[a-z]/gi, c => { const offset = c <= 'Z' ? 0x1D5D4 - 65 : 0x1D5EE - 97; return String.fromCharCode(c.charCodeAt(0) + offset); })},
+  { name: "Sans Serif Italic", fn: t => t.replace(/[a-z]/gi, c => { const offset = c <= 'Z' ? 0x1D608 - 65 : 0x1D622 - 97; return String.fromCharCode(c.charCodeAt(0) + offset); })},
+  { name: "Sans Serif Bold Italic", fn: t => t.replace(/[a-z]/gi, c => { const offset = c <= 'Z' ? 0x1D63C - 65 : 0x1D656 - 97; return String.fromCharCode(c.charCodeAt(0) + offset); })},
+      { name: "Fraktur", fn: t => t.replace(/[a-z]/gi, c => {
+          const offset = c <= 'Z' ? 0x1D504 - 65 : 0x1D51E - 97;
+          return String.fromCharCode(c.charCodeAt(0) + offset);
+        })},
+      { name: "Double Struck", fn: t => t.replace(/[a-z]/gi, c => {
+          const offset = c <= 'Z' ? 0x1D538 - 65 : 0x1D552 - 97;
+          return String.fromCharCode(c.charCodeAt(0) + offset);
+        })},
+      { name: "Small Caps", fn: t => t.toLowerCase().replace(/[a-z]/g, c => "ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀꜱᴛᴜᴠᴡxʏᴢ"["abcdefghijklmnopqrstuvwxyz".indexOf(c)]) },
+      { name: "Bubble", fn: t => t.replace(/[a-z]/gi, c => {
+          const bubbles = {
+            a: 'ⓐ', b: 'ⓑ', c: 'ⓒ', d: 'ⓓ', e: 'ⓔ', f: 'ⓕ',
+            g: 'ⓖ', h: 'ⓗ', i: 'ⓘ', j: 'ⓙ', k: 'ⓚ', l: 'ⓛ',
+            m: 'ⓜ', n: 'ⓝ', o: 'ⓞ', p: 'ⓟ', q: 'ⓠ', r: 'ⓡ',
+            s: 'ⓢ', t: 'ⓣ', u: 'ⓤ', v: 'ⓥ', w: 'ⓦ', x: 'ⓧ',
+            y: 'ⓨ', z: 'ⓩ'
+          };
+          return bubbles[c.toLowerCase()] || c;
+        })},
+      { name: "Wide", fn: t => t.split('').map(c => c === ' ' ? ' ' : String.fromCharCode(0xFF21 + c.toUpperCase().charCodeAt(0) - 65)).join('') },
+      { name: "Strike Through", fn: t => [...t].map(c => c + '\u0336').join('') },
+      { name: "Underline", fn: t => [...t].map(c => c + '\u0332').join('') },
+      { name: "Mirror", fn: t => t.split('').reverse().join('') }
+    ];
+
+    function generateFancyText() {
+      const input = document.getElementById("inputText").value;
+      const resultContainer = document.getElementById("resultContainer");
+      resultContainer.innerHTML = "";
+
+      if (!input) return;
+
+      styles.forEach(style => {
+        const fancy = style.fn(input);
+        const div = document.createElement("div");
+        div.className = "output";
+        div.innerText = fancy;
+        div.title = `Klik untuk copy (${style.name})`;
+        div.onclick = () => {
+          navigator.clipboard.writeText(fancy);
+          alert(`Copied (${style.name})!`);
+        };
+        resultContainer.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>

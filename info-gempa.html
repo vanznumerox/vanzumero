@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informasi Gempa Terkini</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        #gempa-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .gempa-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .gempa-item strong {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .loading {
+            text-align: center;
+            font-style: italic;
+            color: #777;
+        }
+
+        .error {
+            text-align: center;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Informasi Gempa Terkini</h1>
+        <ul id="gempa-list">
+            <li class="loading">Memuat informasi gempa...</li>
+        </ul>
+    </div>
+
+    <script>
+        async function getGempa() {
+            const url = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson';
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                return data.features;
+            } catch (error) {
+                console.error("Gagal mengambil data gempa:", error);
+                return null;
+            }
+        }
+
+        async function displayGempa() {
+            const gempaListElement = document.getElementById('gempa-list');
+            gempaListElement.innerHTML = '<li class="loading">Memuat informasi gempa...</li>';
+
+            const dataGempa = await getGempa();
+
+            if (dataGempa && dataGempa.length > 0) {
+                gempaListElement.innerHTML = '';
+                dataGempa.forEach((gempa) => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('gempa-item');
+                    const tanggal = new Date(gempa.properties.time);
+                    listItem.innerHTML = `
+                        <strong>Tanggal:</strong> ${tanggal.toLocaleDateString()} <br>
+                        <strong>Jam:</strong> ${tanggal.toLocaleTimeString()} <br>
+                        <strong>Lintang:</strong> ${gempa.geometry.coordinates[1]} <br>
+                        <strong>Bujur:</strong> ${gempa.geometry.coordinates[0]} <br>
+                        <strong>Magnitude:</strong> ${gempa.properties.mag} <br>
+                        <strong>Kedalaman:</strong> ${gempa.geometry.coordinates[2]} km <br>
+                        <strong>Lokasi:</strong> ${gempa.properties.place}
+                    `;
+                    gempaListElement.appendChild(listItem);
+                });
+            } else {
+                gempaListElement.innerHTML = '<li class="error">Gagal memuat informasi gempa. Silakan coba lagi nanti.</li>';
+            }
+        }
+
+        displayGempa();
+    </script>
+</body>
+</html>

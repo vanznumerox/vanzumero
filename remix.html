@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Audio Mixer</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        #audio-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            background-color: #e0e0e0;
+            padding: 40px;
+            border-radius: 50px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        #audio-controls input[type="file"] {
+            margin-bottom: 10px;
+        }
+        .mixer {
+            background-color: #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Adjusted minmax width */
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .control {
+            display: flex;
+            flex-direction: column;
+            align-item center;
+        }
+        .control label {
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        .control input[type="range"] {
+            width: 100px; /* Adjusted width */
+        }
+        .checkbox-group {
+            background-color: #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .checkbox-control {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .checkbox-control label {
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        .checkbox-control input[type="checkbox"] {
+            margin-top: 10px;
+        }
+        #audio-player {
+            width: 120%;
+            max-width: 600px;
+        }
+        #visualizer-container {
+            width: 100%;
+            max-width: 600px;
+            height: 100px;
+            background-color: #ccc;
+            margin-top: 1px;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+          
+        }
+        #visualizer-canvas {
+            position: absolute;
+            top: 100;
+            left: 50;
+            width: 100%;
+            height: 100%;
+        }
+        #heartbeat {
+            width: 50px;
+            height: 50px;
+            background-color: #dc3545; /* Bootstrap red */
+            border-radius: 50%;
+            margin-top: 20px;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.2); opacity: 0.7; }
+        }
+    .h3-bawah {
+        padding-top: 25px;
+    }
+    
+    </style>
+</head>
+
+<body>
+    <div class="latar-belakang">
+    <h1>Simple Audio Mixer</h1>
+
+    <div id="audio-controls">
+        <input type="file" id="audio-file" accept="audio/*">
+        <audio id="audio-player" controls></audio>
+    </div>
+        <h3 class="h3-bawah">Visualizer:</h3>
+<div id="visualizer-container">
+        <canvas id="visualizer-canvas"></canvas>
+    </div>
+        <hr>
+        <p>mixer audio musik</p>
+    <div class="mixer">
+        
+        <div class="control">
+            <label for="volume">Volume</label>
+            <input type="range" id="volume" min="0" max="2" step="0.01" value="1">
+        </div>
+
+        <div class="control">
+            <label for="bass">Bass</label>
+            <input type="range" id="bass" min="-20" max="70" value="0">
+        </div>
+        <div class="control">
+            <label for="middle">Middle</label>
+            <input type="range" id="middle" min="-20" max="70" value="0">
+        </div>
+        <div class="control">
+            <label for="treble">Treble</label>
+            <input type="range" id="treble" min="-20" max="70" value="0">
+        </div>
+        <div class="control">
+            <label for="panning">Panning</label>
+            <input type="range" id="panning" min="-1" max="70" step="0.1" value="0">
+        </div>
+        <div class="control">
+            <label for="mic-volume">Mic Volume</label>
+            <input type="range" id="mic-volume" min="0" max="70" step="0.01" value="0">
+        </div>
+        <div class="control">
+            <label for="mic-treble">Mic Treble</label>
+            <input type="range" id="mic-treble" min="-20" max="50" value="0">
+        </div>
+        <div class="control">
+            <label for="mic-bass">Mic Bass</label>
+            <input type="range" id="mic-bass" min="-20" max="50" value="0">
+        </div>
+        <div class="control">
+            <label for="mic-middle">Mic Middle</label>
+            <input type="range" id="mic-middle" min="-20" max="50" value="0">
+        </div>
+        <div class="control">
+            <label for="reverb">Reverb</label>
+            <input type="range" id="reverb" min="0" max="70" step="0.01" value="0">
+        </div>
+        <div class="control">
+            <label for="crossover">Crossover (Hz)</label>
+            <input type="range" id="crossover" min="20" max="20000" value="1000">
+        </div>
+        <div class="control">
+            <label for="compression">Kompresi</label>
+            <input type="range" id="compression" min="1" max="70" value="1">
+        </div>
+        <div class="control">
+            <label for="limiting">Limiting (dB)</label>
+            <input type="range" id="limiting" min="-60" max="70" value="0">
+        </div>
+        <div class="control">
+            <label for="gate">Gate (dB)</label>
+            <input type="range" id="gate" min="-60" max="80" value="-60">
+        </div>
+        <div class="control">
+            <label for="chorus">Chorus</label>
+            <input type="range" id="chorus" min="0" max="80" step="0.01" value="0">
+        </div>
+        <div class="control">
+            <label for="flanger">Flanger</label>
+            <input type="range" id="flanger" min="0" max="80" step="0.01" value="0">
+        </div>
+        <div class="control">
+            <label for="phaser">Phaser</label>
+            <input type="range" id="phaser" min="0" max="80" step="0.01" value="0">
+        </div>
+        <div class="control">
+            <label for="distortion">Distorsi</label>
+            <input type="range" id="distortion" min="0" max="80" step="0.01" value="0">
+        </div>
+        <div class="control">
+            <label for="de-esser">De-esser</label>
+            <input type="range" id="de-esser" min="0" max="80" step="0.01" value="0">
+        </div>
+        <div class="control">
+            <label for="exiter">Exiter</label>
+            <input type="range" id="exiter" min="0" max="80" step="0.01" value="0">
+        </div>
+        <div class="control">
+            <label for="stereo">Stereo Width</label>
+            <input type="range" id="stereo" min="-1" max="80" step="0.1" value="0">
+        </div>
+        <div class="control">
+            <label for="vibrato">Vibrato</label>
+            <input type="range" id="vibrato" min="0" max="80" step="0.01" value="0">
+        </div>
+        <div class="control">
+            <label for="bitcrusher">Bitcrusher</label>
+            <input type="range" id="bitcrusher" min="0" max="80" step="0.01" value="0">
+        </div>
+        <div class="control">
+            <label for="tremolo">Tremolo</label>
+            <input type="range" id="tremolo" min="0" max="80" step="0.01" value="0">
+        </div>
+        
+    </div>
+
+    
+        <div class="checkbox-control">
+            <label for="volume-booster">Booster</label>
+            <input type="checkbox" id="volume-booster">
+        </div>
+        <div class="checkbox-control">
+            <label for="eq">Equalizer</label>
+            <input type="checkbox" id="eq">
+        </div>
+        
+        
+    </div>
+
+    
+
+    <div id="heartbeat"></div>
+    </div>
+    <script>
+        const audioFile = document.getElementById('audio-file');
+        const audioPlayer = document.getElementById('audio-player');
+        const volumeControl = document.getElementById('volume');
+        const bassControl = document.getElementById('bass');
+        const middleControl = document.getElementById('middle');
+        const trebleControl = document.getElementById('treble');
+        const panningControl = document.getElementById('panning');
+        const micVolumeControl = document.getElementById('mic-volume');
+        const micTrebleControl = document.getElementById('mic-treble');
+        const micBassControl = document.getElementById('mic-bass');
+        const micMiddleControl = document.getElementById('mic-middle');
+        const echoControl = document.getElementById('echo');
+        const reverbControl = document.getElementById('reverb');
+        const crossoverControl = document.getElementById('crossover');
+        const volumeBoosterControl = document.getElementById('volume-booster');
+        const compressionControl = document.getElementById('compression');
+        const limitingControl = document.getElementById('limiting');
+        const eqControl = document.getElementById('eq');
+        const gateControl = document.getElementById('gate');
+        const chorusControl = document.getElementById('chorus');
+        const flangerControl = document.getElementById('flanger');
+        const phaserControl = document.getElementById('phaser');
+        const distortionControl = document.getElementById('distortion');
+        const deEsserControl = document.getElementById('de-esser');
+        const exiterControl = document.getElementById('exiter');
+        const stereoControl = document.getElementById('stereo');
+        const vibratoControl = document.getElementById('vibrato');
+        const tremoloControl = document.getElementById('tremolo');
+        const bitcrusherControl = document.getElementById('bitcrusher');
+        const heartbeat = document.getElementById('heartbeat');
+        const visualizerCanvas = document.getElementById('visualizer-canvas');
+        const visualizerContext = visualizerCanvas.getContext('2d');
+
+        let audioContext;
+        let source;
+        let analyser;
+        let gainNode;
+        let bassEQ, middleEQ, trebleEQ;
+        let panNode;
+        let echoNode; // For echo effect
+        let reverbEffect; // Placeholder for reverb
+        let compressorNode;
+        let limiterNode;
+        let noiseGateNode;
+        let chorusEffect; // Placeholder for chorus
+        let flangerEffect; // Placeholder for flanger
+        let phaserEffect; // Placeholder for phaser
+        let distortionEffect; // Placeholder for distortion
+        let deEsserEffect; // Placeholder for de-esser
+        let exiterEffect; // Placeholder for exiter
+        let stereoEnhancer; // Placeholder for stereo widening
+        let vibratoEffect; // Placeholder for vibrato
+        let tremoloEffect; // Placeholder for tremolo
+        let bitcrusherEffect; // Placeholder for bitcrusher
+
+        audioFile.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    audioPlayer.src = e.target.result;
+                    audioPlayer.onloadedmetadata = function() {
+                        setupAudioNodes();
+                    };
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function setupAudioNodes() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                source = audioContext.createMediaElementSource(audioPlayer);
+                gainNode = audioContext.createGain();
+                panNode = audioContext.createStereoPanner();
+
+                bassEQ = audioContext.createBiquadFilter();
+                bassEQ.type = 'lowshelf';
+                bassEQ.frequency.value = 100;
+
+                middleEQ = audioContext.createBiquadFilter();
+                middleEQ.type = 'peaking';
+                middleEQ.frequency.value = 1000;
+                middleEQ.Q.value = 1;
+
+                trebleEQ = audioContext.createBiquadFilter();
+                trebleEQ.type = 'highshelf';
+                trebleEQ.frequency.value = 10000;
+
+                analyser = audioContext.createAnalyser();
+                analyser.fftSize = 2048; // Increased for better visualization
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+                const visualizerWidth = visualizerCanvas.width;
+                const visualizerHeight = visualizerCanvas.height;
+
+                // Basic Echo Effect (Simple Delay)
+                echoNode = audioContext.createDelay(1); // Max delay of 1 second
+                const echoGain = audioContext.createGain();
+                echoGain.gain.value = 0.3; // Amount of feedback
+
+                source.connect(bassEQ);
+                bassEQ.connect(middleEQ);
+                middleEQ.connect(trebleEQ);
+                trebleEQ.connect(gainNode);
+                gainNode.connect(panNode);
+
+                // Echo routing
+                panNode.connect(echoNode);
+                echoNode.connect(echoGain);
+                echoGain.connect(gainNode); // Feedback loop
+
+                gainNode.connect(analyser);
+                analyser.connect(audioContext.destination);
+
+                // Visualizer
+                function drawVisualizer() {
+                    requestAnimationFrame(drawVisualizer);
+                    analyser.getByteTimeDomainData(dataArray);
+
+                    visualizerContext.fillStyle = '#ccc';
+                    visualizerContext.fillRect(0, 0, visualizerWidth, visualizerHeight);
+                    visualizerContext.lineWidth = 2;
+                    visualizerContext.strokeStyle = 'blue';
+                    visualizerContext.beginPath();
+
+                    let sliceWidth = visualizerWidth * 1.0 / bufferLength;
+                    let x = 0;
+
+                    for (let i = 0; i < bufferLength; i++) {
+                        let v = dataArray[i] / 128.0;
+                        let y = visualizerHeight / 2 + v * visualizerHeight / 2;
+
+                        if (i === 0) {
+                            visualizerContext.moveTo(x, y);
+                        } else {
+                            visualizerContext.lineTo(x, y);
+                        }
+
+                        x += sliceWidth;
+                    }
+
+                    visualizerContext.lineTo(visualizerWidth, visualizerHeight / 2);
+                    visualizerContext.stroke();
+                }
+                drawVisualizer();
+
+                // Visual heartbeat (based on volume)
+                function updateHeartbeat() {
+                    analyser.getByteFrequencyData(dataArray);
+                    let average = dataArray.reduce((a, b) => a , 0) / bufferLength;
+                    let scale = 1 + average / 255 * 0.3; // Adjust scaling factor
+                    heartbeat.style.transform = `scale(${scale})`;
+                    requestAnimationFrame(updateHeartbeat);
+                }
+                updateHeartbeat();
+            }
+        }
+
+        volumeControl.addEventListener('input', function() {
+            if (gainNode) {
+                gainNode.gain.value = parseFloat(this.value);
+            }
+        });
+
+        bassControl.addEventListener('input', function() {
+            if (bassEQ) {
+                bassEQ.gain.value = parseInt(this.value);
+            }
+        });
+
+        middleControl.addEventListener('input', function() {
+            if (middleEQ) {
+                middleEQ.gain.value = parseInt(this.value);
+            }
+        });
+
+        trebleControl.addEventListener('input', function() {
+            if (trebleEQ) {
+                trebleEQ.gain.value = parseInt(this.value);
+            }
+        });
+
+        panningControl.addEventListener('input', function() {
+            if (panNode) {
+                panNode.pan.value = parseFloat(this.value);
+            }
+        });
+
+        echoControl.addEventListener('change', function() {
+            if (echoNode) {
+                echoNode.delayTime.value = this.checked ? 0.2 : 0; // Example delay time
+            }
+        });
+
+        reverbControl.addEventListener('input', function() {
+            // Implement reverb using ConvolverNode with an impulse response
+            console.log("Reverb level:", this.value, "(implementation needed with ConvolverNode)");
+        });
+
+        crossoverControl.addEventListener('input', function() {
+            // Implement crossover effect by creating more filters and routing
+            console.log("Crossover frequency:", this.value, "(advanced filtering needed)");
+        });
+
+        volumeBoosterControl.addEventListener('change', function() {
+            if (gainNode) {
+                gainNode.gain.value = this.checked ? Math.max(1, parseFloat(volumeControl.value) * 2) : parseFloat(volumeControl.value);
+            }
+        });
+
+        compressionControl.addEventListener('input', function() {
+            if (!compressorNode) {
+                compressorNode = audioContext.createDynamicsCompressor();
+                if (panNode) {
+                    panNode.disconnect(analyser);
+                    panNode.connect(compressorNode);
+                    compressorNode.connect(analyser);
+                } else if (gainNode) {
+                    gainNode.disconnect(analyser);
+                    gainNode.connect(compressorNode);
+                    compressorNode.connect(analyser);
+                }
+            }
+            if (compressorNode) {
+                compressorNode.ratio.value = parseFloat(this.value);
+            }
+        });
+
+        limitingControl.addEventListener('input', function() {
+            if (!limiterNode) {
+                limiterNode = audioContext.createWaveShaper();
+                // Implement a soft limiter curve
+                const curve = new Float32Array(4096);
+                const k = typeof value === 'number' ? value : 0;
+                for (let i = 0; i < 4096; i++) {
+                    let x = i / 2048 - 1;
+                    curve[i] = Math.atan(x * k) / Math.PI * 2;
+                }
+                limiterNode.curve = curve;
+                limiterNode.oversample = '4x';
+                if (compressorNode) {
+                    compressorNode.disconnect(analyser);
+                    compressorNode.connect(limiterNode);
+                    limiterNode.connect(analyser);
+                } else if (panNode) {
+                    panNode.disconnect(analyser);
+                    panNode.connect(limiterNode);
+                    limiterNode.connect(analyser);
+                } else if (gainNode) {
+                    gainNode.disconnect(analyser);
+                    gainNode.connect(limiterNode);
+                    limiterNode.connect(analyser);
+                }
+            }
+            // The effect of the limiter is mainly through its connection and curve.
+            // You might adjust parameters of preceding nodes based on this value.
+            console.log("Limiter threshold:", this.value, "dB (curve adjustment needed)");
+        });
+
+        eqControl.addEventListener('change', function() {
+            // Implement more detailed EQ using multiple BiquadFilter nodes
+            console.log("Equalizer enabled:", this.checked, "(multiple filters needed)");
+        });
+
+        gateControl.addEventListener('input', function() {
+            if (!noiseGateNode) {
+                noiseGateNode = audioContext.createGain();
+                if (panNode) {
+                    panNode.disconnect(analyser);
+                    panNode.connect(noiseGateNode);
+                    noiseGateNode.connect(analyser);
+                } else if (gainNode) {
+                    gainNode.disconnect(analyser);
+                    gainNode.connect(noiseGateNode);
+                    noiseGateNode.connect(analyser);
+                }
+            }
+            if (noiseGateNode) {
+                // Simple gate implementation using gain
+                noiseGateNode.gain.value = gainNode.gain.value > dbToGain(parseFloat(this.value)) ? 1 : 0;
+            }
+        });
+
+        chorusControl.addEventListener('input', function() {
+            // Implement chorus effect using multiple delay nodes with LFO modulation
+            console.log("Chorus level:", this.value, "(multiple delays and LFO needed)");
+        });
+
+        flangerControl.addEventListener('input', function() {
+            // Implement flanger effect using a single delay node with LFO modulation
+            console.log("Flanger level:", this.value, "(single delay and LFO needed)");
+        });
+
+        phaserControl.addEventListener('input', function() {
+            // Implement phaser effect using multiple all-pass filters with LFO modulation
+            console.log("Phaser level:", this.value, "(multiple all-pass filters and LFO needed)");
+        });
+
+        distortionControl.addEventListener('input', function() {
+            if (!distortionEffect) {
+                distortionEffect = audioContext.createWaveShaper();
+                distortionEffect.curve = makeDistortionCurve(Math.pow(10, this.value * 2)); // Example curve
+                distortionEffect.oversample = '4x';
+                if (panNode) {
+                    panNode.disconnect(analyser);
+                    panNode.connect(distortionEffect);
+                    distortionEffect.connect(analyser);
+                } else if (gainNode) {
+                    gainNode.disconnect(analyser);
+                    gainNode.connect(distortionEffect);
+                    distortionEffect.connect(analyser);
+                }
+            } else {
+                distortionEffect.curve = makeDistortionCurve(Math.pow(10, this.value * 2));
+            }
+        });
+
+        deEsserControl.addEventListener('input', function() {
+            // Implement de-esser using a band-pass filter and compressor
+            console.log("De-esser level:", this.value, "(band-pass and compressor needed)");
+        });
+
+        exiterControl.addEventListener('input', function() {
+            // Implement exciter by adding harmonics
+            console.log("Exiter level:", this.value, "(waveshaping or other harmonic generation needed)");
+        });
+
+        stereoControl.addEventListener('input', function() {
+            // Implement stereo widening using Mid/Side processing or Haas effect
+            console.log("Stereo width:", this.value, "(Mid/Side or delay manipulation needed)");
+        });
+
+        // Microphone input
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(function(stream) {
+                const micContext = new (window.AudioContext || window.webkitAudioContext)();
+                const micSource = micContext.createMediaStreamSource(stream);
+                const micGain = micContext.createGain();
+                let micBassEQ = micContext.createBiquadFilter();
+                micBassEQ.type = 'lowshelf';
+                micBassEQ.frequency.value = 100;
+                let micMiddleEQ = micContext.createBiquadFilter();
+                micMiddleEQ.type = 'peaking';
+                micMiddleEQ.frequency.value = 1000;
+                micMiddleEQ.Q.value = 1;
+                let micTrebleEQ = micContext.createBiquadFilter();
+                micTrebleEQ.type = 'highshelf';
+                micTrebleEQ.frequency.value = 10000;
+
+                micSource.connect(micBassEQ);
+                micBassEQ.connect(micMiddleEQ);
+                micMiddleEQ.connect(micTrebleEQ);
+                micTrebleEQ.connect(micGain);
+                micGain.connect(audioContext.destination);
+                micVolumeControl.addEventListener('input', function() {
+                    micGain.gain.value = parseFloat(this.value);
+                });
+
+                micBassControl.addEventListener('input', function() {
+                    micBassEQ.gain.value = parseInt(this.value);
+                });
+
+                micMiddleControl.addEventListener('input', function() {
+                    micMiddleEQ.gain.value = parseInt(this.value);
+                });
+
+                micTrebleControl.addEventListener('input', function() {
+                    micTrebleEQ.gain.value = parseInt(this.value);
+                });
+            })
+            .catch(function(err) {
+                console.error('Error accessing microphone:', err);
+            });
+
+        function dbToGain(db) {
+            return Math.pow(10, db / 20);
+        }
+
+        function makeDistortionCurve(amount) {
+            const k = typeof amount === 'number' ? amount : 0;
+            const n_samples = 44100;
+            const curve = new Float32Array(n_samples);
+            const deg = Math.PI / 180;
+            for (let i = 0; i < n_samples; ++i) {
+                const x = i * 2 / n_samples - 1;
+                curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
+            }
+            return curve;
+        }
+
+        // Detak jantung visual sederhana berdasarkan volume
+        function updateHeartbeat() {
+            if (analyser && heartbeat) {
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+                analyser.getByteFrequencyData(dataArray);
+                let average = dataArray.reduce((a, b) => a + b, 0) / bufferLength;
+                let scale = 1 + average / 255 * 0.3; // Adjust scaling factor
+                heartbeat.style.transform = `scale(${scale})`;
+            }
+            requestAnimationFrame(updateHeartbeat);
+        }
+
+        // Inisialisasi animasi detak jantung
+        if (heartbeat) {
+            requestAnimationFrame(updateHeartbeat);
+        }
+
+        // Fungsi sederhana untuk mengaitkan detak jantung dengan tempo (BPM) musik
+        function updateHeartbeatTempo(bpm) {
+            if (heartbeat) {
+                const duration = 60 / bpm;
+                heartbeat.style.animationDuration = `${duration}s`;
+            }
+        }
+
+        // Anda perlu cara untuk mendeteksi BPM musik secara otomatis atau manual
+        // Contoh manual:
+        audioPlayer.addEventListener('play', function() {
+            // Asumsi tempo default 120 BPM
+            updateHeartbeatTempo(120);
+        });
+
+        // Jika audio dijeda, kembalikan ke kecepatan default atau hentikan animasi
+        audioPlayer.addEventListener('pause', function() {
+            if (heartbeat) {
+                heartbeat.style.animationDuration = '1s'; // Kembali ke kecepatan default
+            }
+        });
+
+        // Initialize visualizer canvas size
+        function resizeCanvas() {
+            visualizerCanvas.width = visualizerContainer.offsetWidth;
+            visualizerCanvas.height = visualizerContainer.offsetHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+    </script>
+</body>
+</html>

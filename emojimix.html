@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emoji Mix - Hacker Style</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #1e1e1e;
+      color: #00ff00;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+
+    .container {
+      text-align: center;
+      border: 2px solid #00ff00;
+      padding: 20px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 400px;
+      background-color: #0a0a0a;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .input-box {
+      margin-bottom: 20px;
+    }
+
+    input {
+      background-color: #1e1e1e;
+      border: 1px solid #00ff00;
+      color: #00ff00;
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      margin-top: 5px;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #00ff00;
+      color: #1e1e1e;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #00cc00;
+    }
+
+    .output-box {
+      margin-top: 20px;
+      word-wrap: break-word;
+      font-size: 24px;
+      color: #ff007f;
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Emoji Mix Generator</h1>
+    <div class="input-box">
+      <label for="emojiInput">Enter Two Emojis (separated by +):</label>
+      <input type="text" id="emojiInput" placeholder="😅+🤔">
+    </div>
+    <button onclick="showEmojiMix()">Show Emoji Mix</button>
+    <div id="output" class="output-box"></div>
+  </div>
+
+  <script>
+    function showEmojiMix() {
+      let emojiInput = document.getElementById("emojiInput").value.trim();
+      let outputBox = document.getElementById("output");
+
+      if (!emojiInput.includes("+")) {
+        outputBox.innerHTML = "<span style='color: yellow;'>ERROR:</span> Please enter two emojis separated by '+'. Example: 😅+🤔";
+        outputBox.style.display = "block";
+        return;
+      }
+
+      let [emoji1, emoji2] = emojiInput.split("+");
+
+      if (!emoji1 || !emoji2) {
+        outputBox.innerHTML = "<span style='color: yellow;'>ERROR:</span> Example: 😅+🤔";
+        outputBox.style.display = "block";
+        return;
+      }
+
+      outputBox.innerHTML = `<span style="font-size: 40px;">${emoji1}${emoji2}</span>`;
+      outputBox.style.display = "block";
+    }
+  </script>
+
+</body>
+</html>

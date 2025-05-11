@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informasi Negara</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace; /* Monospaced font for hacker look */
+            background-color: #000; /* Dark background */
+            color: #00FF00; /* Green text, classic hacker style */
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            border: 1px solid #00FF00; /* Green border */
+            padding: 20px;
+        }
+
+        h1 {
+            color: #00FF00;
+            border-bottom: 2px solid #00FF00;
+            padding-bottom: 10px;
+        }
+
+        input[type="text"] {
+            background-color: #333; /* Dark input field */
+            color: #00FF00;
+            border: 1px solid #00FF00;
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #00FF00; /* Green button */
+            color: #000;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .country-info {
+            border: 1px solid #00FF00;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .flag {
+            max-width: 100px;
+            border: 1px solid #00FF00; /* Green border for the flag */
+        }
+
+        .map-container {
+            width: 100%;
+            height: 400px;
+        }
+
+        strong {
+            color: #00FF00; /* Green for important text */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Informasi Negara</h1>
+        <input type="text" id="countryName" placeholder="Masukkan nama negara (mis., Vietnam)">
+        <button onclick="getCountryInfo()">Dapatkan Info</button>
+        <div id="countryInfo"></div>
+    </div>
+
+    <script>
+        async function getCountryInfo() {
+            const countryName = document.getElementById('countryName').value;
+            const url = `https://api.siputzx.my.id/api/tools/countryInfo?name=${encodeURIComponent(countryName)}`;
+
+            try {
+                const res = await fetch(url);
+                const json = await res.json();
+
+                if (!json.status) {
+                    document.getElementById('countryInfo').innerHTML = "<p>Negara tidak ditemukan!</p>";
+                    return;
+                }
+
+                const data = json.data;
+                const neighbors = data.neighbors.map(n => `- ${n.name} (${n.flag})`).join("<br>");
+
+                let html = `
+                    <div class="country-info">
+                        <h2>${data.name}</h2>
+                        <img src="${data.flag}" alt="Bendera ${data.name}" class="flag"><br>
+                        <strong>Ibukota:</strong> ${data.capital}<br>
+                        <strong>Koordinat:</strong> ${data.coordinates.latitude}, ${data.coordinates.longitude}<br>
+                        <strong>Kode Telepon:</strong> ${data.phoneCode}<br>
+                        <strong>Benua:</strong> ${data.continent.name} ${data.continent.emoji}<br>
+                        <strong>Bahasa:</strong> ${data.languages.native.join(", ")}<br>
+                        <strong>Mata Uang:</strong> ${data.currency}<br>
+                        <strong>Sisi Mengemudi:</strong> ${data.drivingSide}<br>
+                        <strong>Terkenal Karena:</strong> ${data.famousFor}<br>
+                        <strong>Bentuk Konstitusional:</strong> ${data.constitutionalForm}<br>
+                        <strong>TLD Internet:</strong> ${data.internetTLD}<br>
+                        <strong>Negara Tetangga:</strong><br> ${neighbors || "Tidak ada"}<br>
+                        <div class="map-container">
+                            <iframe
+                                width="100%"
+                                height="100%"
+                                style="border:0"
+                                loading="lazy"
+                                src="${data.googleMapsLink}">
+                            </iframe>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('countryInfo').innerHTML = html;
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('countryInfo').innerHTML = "<p>Gagal mengambil data.</p>";
+            }
+        }
+    </script>
+</body>
+</html>

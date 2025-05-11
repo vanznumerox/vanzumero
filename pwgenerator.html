@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Generator</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: #2b2b2b;
+      color: #00ff00;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      width: 400px; /* Sedikit diperkecil */
+      padding: 30px; /* Padding diperbanyak */
+      background-color: #1a1a1a;
+      border: 1px solid #00ff00;
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.7); /* Efek shadow lebih kuat */
+      border-radius: 8px; /* Tambah border radius */
+      display: flex;
+      flex-direction: column;
+      gap: 15px; /* Jarak antar elemen */
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 5px;
+    }
+
+    .input-field {
+      padding: 12px;
+      background-color: #2b2b2b;
+      border: 1px solid #00ff00; /* Tambah border */
+      color: #00ff00;
+      font-size: 16px;
+      border-radius: 4px; /* Tambah border radius */
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    .button {
+      padding: 12px 20px;
+      background-color: #00ff00;
+      color: #2b2b2b;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s ease; /* Efek transisi hover */
+    }
+
+    .button:hover {
+      background-color: #00cc00;
+    }
+
+    .password-container {
+      margin-top: 20px;
+      background-color: #2b2b2b;
+      border: 1px dashed #00ff00; /* Ubah border jadi dashed */
+      padding: 15px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between; /* Agar password dan tombol copy berjauhan */
+      align-items: center;
+    }
+
+    .password {
+      font-size: 20px;
+      font-weight: bold;
+      color: #00ff00;
+      word-break: break-all; /* Jika password panjang, akan wrap */
+    }
+
+    .copy-button {
+      background-color: transparent;
+      color: #00ff00;
+      border: 1px solid #00ff00;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+
+    .copy-button:hover {
+      background-color: #00ff00;
+      color: #2b2b2b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Password Generator</h1>
+    </div>
+    <div class="input-group">
+      <label for="length">Password Length:</label>
+      <input id="length" type="number" class="input-field" value="12" min="6" max="50"> </div>
+    <div class="checkbox-group">
+      <input id="uppercase" type="checkbox" checked>
+      <label for="uppercase">Include Uppercase Letters</label>
+    </div>
+    <div class="checkbox-group">
+      <input id="numbers" type="checkbox" checked>
+      <label for="numbers">Include Numbers</label>
+    </div>
+    <div class="checkbox-group">
+      <input id="special" type="checkbox" checked>
+      <label for="special">Include Special Characters</label>
+    </div>
+    <button id="generate" class="button">Generate Password</button>
+    <div class="password-container">
+      <div id="password" class="password"></div>
+      <button id="copy" class="copy-button" title="Copy to Clipboard" disabled>Copy</button> </div>
+
+    <script>
+      const lengthInput = document.getElementById('length');
+      const uppercaseCheckbox = document.getElementById('uppercase');
+      const numbersCheckbox = document.getElementById('numbers');
+      const specialCheckbox = document.getElementById('special');
+      const generateButton = document.getElementById('generate');
+      const passwordDiv = document.getElementById('password');
+      const copyButton = document.getElementById('copy'); // Ambil tombol copy
+
+      generateButton.addEventListener('click', () => {
+        const length = parseInt(lengthInput.value);
+        const uppercase = uppercaseCheckbox.checked;
+        const numbers = numbersCheckbox.checked;
+        const special = specialCheckbox.checked;
+
+        let chars = 'abcdefghijklmnopqrstuvwxyz';
+        if (uppercase) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if (numbers) chars += '0123456789';
+        if (special) chars += '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+
+        let password = '';
+        for (let i = 0; i < length; i++) {
+          password += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+
+        passwordDiv.textContent = password;
+        copyButton.disabled = false; // Aktifkan tombol copy setelah password dibuat
+      });
+
+      copyButton.addEventListener('click', () => {
+        const passwordText = passwordDiv.textContent;
+        navigator.clipboard.writeText(passwordText).then(() => {
+          alert('Password copied to clipboard!'); // Beri notifikasi setelah disalin
+        }).catch(err => {
+          console.error('Failed to copy: ', err);
+        });
+      });
+    </script>
+  </div>
+</body>
+</html>

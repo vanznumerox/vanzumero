@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subdomain Finder</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      text-align: center;
+      margin: 0;
+      padding-top: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 30px;
+      font-size: 2.5em;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"] {
+      padding: 12px 20px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1em;
+      width: 80%;
+      max-width: 400px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    #hasil {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #eee;
+      border-radius: 5px;
+      white-space: pre-wrap;
+      font-size: 0.9em;
+      color: #555;
+      width: 80%;
+      max-width: 600px;
+      box-sizing: border-box;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    #hasil strong {
+      color: #e74c3c;
+    }
+
+    .loading::after {
+      content: '...';
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Subdomain Finder</h1>
+  <input id="domain" type="text" placeholder="Masukkan domain">
+  <button id="cari">Cari Subdomain</button>
+  <div id="hasil"></div>
+
+  <script>
+    const domainInput = document.getElementById('domain');
+    const cariButton = document.getElementById('cari');
+    const hasilDiv = document.getElementById('hasil');
+
+    cariButton.addEventListener('click', async () => {
+      const domain = domainInput.value.trim();
+      if (!domain) return hasilDiv.textContent = 'Masukkan domain terlebih dahulu!';
+
+      hasilDiv.textContent = `Mencari subdomain untuk ${domain}...`;
+      hasilDiv.classList.add('loading');
+
+      try {
+        const response = await fetch(`https://api.agatz.xyz/api/subdomain?url=${domain}`);
+        const data = await response.json();
+        hasilDiv.classList.remove('loading');
+        if (data && data.data && data.data.length > 0) {
+          const subdomains = data.data.join('\n');
+          hasilDiv.innerHTML = `🌐 <strong>SUBDOMAIN FINDER</strong> untuk <span style="color: #e74c3c;">${domain}</span>:<pre>${subdomains}</pre>`;
+        } else {
+          hasilDiv.textContent = `Tidak ada subdomain ditemukan untuk ${domain}.`;
+        }
+      } catch (error) {
+        hasilDiv.classList.remove('loading');
+        hasilDiv.textContent = `Error: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>

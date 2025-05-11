@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspirational Quotes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #4ca1af); /* Cool gradient background */
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent dark container */
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Soft shadow */
+            max-width: 80%;
+            width: 600px;
+        }
+
+        h1 {
+            color: #f39c12; /* Vibrant orange title */
+            margin-bottom: 30px;
+            font-size: 2.8em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .quote-container {
+            margin-bottom: 40px;
+        }
+
+        .quote-label {
+            color: #ddd;
+            font-style: italic;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .quote-text {
+            font-size: 1.6em;
+            line-height: 1.5;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        button {
+            background-color: #e74c3c; /* Red button */
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background-color: #c0392b; /* Darker red on hover */
+            transform: translateY(-2px);
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap; /* Allow buttons to wrap to the next line */
+            justify-content: center; /* Center the buttons */
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .category-buttons button {
+            background-color: #3498db; /* Blue category buttons */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-buttons button:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+            transform: translateY(-1px);
+        }
+
+        /* Subtle animation for the quote */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .quote-container {
+            animation: fadeIn 1s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Words of Wisdom</h1>
+        <div class="category-buttons">
+            <button onclick="changeQuoteCategory('quotesdukun')">Dukun</button>
+            <button onclick="changeQuoteCategory('quoteshacker')">Hacker</button>
+            <button onclick="changeQuoteCategory('quoteskekuatan')">Kekuatan</button>
+            <button onclick="changeQuoteCategory('quotespendidikan')">Pendidikan</button>
+            <button onclick="changeQuoteCategory('quotesmotivasi')">Motivasi</button>
+            <button onclick="changeQuoteCategory('truth')">Truth</button>
+            <button onclick="changeQuoteCategory('dare')">Dare</button>
+            <button onclick="changeQuoteCategory('quotespsikologi')">Psikologi</button>
+        </div>
+        <div class="quote-container">
+            <p class="quote-label">A thoughtful saying...</p>
+            <p class="quote-text" id="displayedQuote">Click a category to see a quote.</p>
+        </div>
+        <button onclick="displayRandomQuote()">Get Another Quote</button>
+    </div>
+
+    <script>
+        const quotesData = {
+            'quotesdukun': [
+                '✨ "Kekuatan gaib ada di sekitar kita, kita hanya perlu membuka mata hati untuk melihatnya." - Unknown',
+                '🔮 "Dukun bukanlah orang yang memiliki kekuatan gaib, tapi orang yang memiliki kemampuan untuk menghubungi alam gaib." - Unknown',
+                '💫 "Kekuatan gaib tidak dapat dipahami oleh akal, tapi dapat dirasakan oleh hati." - Unknown',
+                '🔍 "Dukun adalah orang yang memiliki kemampuan untuk melihat apa yang tidak dapat dilihat oleh mata kasar." - Unknown',
+                '✨ "Kekuatan gaib dapat digunakan untuk kebaikan atau kejahatan, tergantung pada niat dan kebijaksanaan orang yang menggunakannya." - Unknown',
+                '🔮 "Dukun bukanlah orang yang memiliki kekuatan untuk mengontrol orang lain, tapi orang yang memiliki kemampuan untuk membantu orang lain." - Unknown',
+                '💫 "Kekuatan gaib dapat membantu kita untuk mencapai tujuan kita, tapi kita harus memiliki niat dan kebijaksanaan untuk menggunakannya dengan benar." - Unknown',
+                '🔍 "Dukun adalah orang yang memiliki kemampuan untuk memahami apa yang tidak dapat dipahami oleh orang lain." - Unknown',
+                '✨ "Kekuatan gaib dapat membantu kita untuk menemukan jawaban atas pertanyaan kita, tapi kita harus memiliki kemampuan untuk mendengarkan dan memahami." - Unknown',
+            ],
+            'quoteshacker': [
+                '💻 "Hacking bukanlah tentang merusak, tapi tentang mencari solusi yang kreatif." - Unknown',
+                '🔓 "Hacker bukanlah penjahat, tapi seorang peneliti yang ingin memahami sistem." - Unknown',
+                '💸 "Hacking adalah seni untuk menemukan celah yang tidak terlihat." - Kevin Mitnick',
+                '🔍 "Hacker adalah seorang detektif yang mencari petunjuk untuk memecahkan masalah." - Unknown',
+                '💻 "Hacking bukanlah tentang menguasai teknologi, tapi tentang memahami bagaimana teknologi bekerja." - Unknown',
+                '🔓 "Hacker adalah seorang inovator yang menciptakan solusi baru untuk masalah lama." - Unknown',
+                '💸 "Hacking adalah permainan yang membutuhkan kreativitas, logika, dan kesabaran." - Unknown',
+                '🔍 "Hacker adalah seorang peneliti yang mencari kebenaran di balik kode." - Unknown',
+                '💻 "Hacking bukanlah tentang merusak, tapi tentang membangun sesuatu yang baru dan lebih baik." - Unknown',
+            ],
+            'quoteskekuatan': [
+                '💪 "Kekuatan terbesar yang dimiliki manusia adalah kemampuan untuk memilih." - Wayne Dyer',
+                '🔥 "Jangan biarkan ketakutan menghalangi potensimu. Ketakutan hanya akan mengecilkan langkahmu." - Unknown',
+                '💫 "Kamu memiliki kekuatan untuk menciptakan hidup yang kamu inginkan. Mulailah dengan memilih pikiran yang tepat." - Bob Proctor',
+                '🌟 "Kekuatan bukanlah tentang kekuatan fisik, tapi tentang kekuatan mental dan spiritual." - Unknown',
+                '🔑 "Kamu adalah arsitek dari hidupmu sendiri. Ciptakanlah hidup yang kamu inginkan." - Unknown',
+                '💪 "Jangan menunggu kesempatan, ciptakanlah kesempatan itu sendiri." - Unknown',
+                '🌈 "Kekuatan terletak pada kemampuan untuk bangkit dari kegagalan." - Unknown',
+                '💫 "Kamu memiliki kekuatan untuk mengubah hidupmu. Mulailah dengan mengubah pikiranmu." - Unknown',
+                '🔥 "Kekuatan bukanlah tentang menang atau kalah, tapi tentang bagaimana kamu bangkit dari kekalahan." - Unknown',
+            ],
+            'quotespendidikan': [
+                '📚 "Pendidikan adalah kunci untuk membuka pintu kesempatan dan kebahagiaan." - Nelson Mandela',
+                '🎓 "Pendidikan bukanlah proses mengisi wadah yang kosong, tapi proses menyalakan api yang sudah ada di dalam diri kita." - W.B. Yeats',
+                '📖 "Pendidikan adalah investasi terbaik yang dapat kita lakukan untuk masa depan kita." - Benjamin Franklin',
+                '👨‍🎓 "Guru yang baik tidak hanya mengajar, tapi juga menginspirasi." - Unknown',
+                '📚 "Pendidikan adalah jalan untuk mencapai kesuksesan, tapi kesuksesan tidak hanya tentang pendidikan." - Unknown',
+                '🎓 "Pendidikan harus membuat kita menjadi lebih baik, bukan hanya lebih pintar." - Unknown',
+                '📖 "Pendidikan adalah proses belajar sepanjang hidup, bukan hanya di sekolah." - Unknown',
+                '👨‍🎓 "Pendidikan harus membangun karakter, bukan hanya mengisi pengetahuan." - Unknown',
+                '📚 "Pendidikan adalah kunci untuk membuka pintu kesadaran dan kebijaksanaan." - Unknown',
+            ],
+            'quotesmotivasi': [
+                '🔥 "Jangan menunggu kesempatan, ciptakanlah kesempatan itu sendiri."',
+                '💪 "Kekuatan terbesar yang dimiliki manusia adalah kemampuan untuk memilih." - Wayne Dyer',
+                '🌟 "Hidup adalah petualangan, dan setiap hari adalah kesempatan untuk menciptakan sesuatu yang baru dan indah." - Unknown',
+                '💫 "Kamu tidak bisa mengubah masa lalu, tapi kamu bisa mengubah masa depan dengan memilih pikiran yang tepat sekarang." - Dr. Wayne Dyer',
+                '🌈 "Kamu memiliki kekuatan untuk menciptakan hidup yang kamu inginkan. Mulailah dengan memilih pikiran yang tepat." - Bob Proctor',
+                '🔑 "Kesuksesan bukanlah tentang mencapai tujuan, tapi tentang menikmati prosesnya." - Zig Ziglar',
+                '💪 "Jangan biarkan ketakutan menghalangi potensimu. Ketakutan hanya akan mengecilkan langkahmu." - Unknown',
+                '🌱 "Pikiran kita adalah benih, dan apa yang kita tanam itu akan tumbuh." - Buddha',
+                '💫 "Kamu adalah arsitek dari hidupmu sendiri. Ciptakanlah hidup yang kamu inginkan." - Unknown',
+            ],
+            'truth': [
+                '😈 Apa rahasia terbesar yang belum pernah kamu ceritakan ke siapa pun?',
+                '🤭 Siapa orang yang diam-diam kamu suka saat ini?',
+                '🫣 Pernah bohong sama sahabat sendiri? Tentang apa?',
+                '👀 Hal paling memalukan yang pernah kamu alami?',
+                '💬 Kalau bisa kembali ke masa lalu, apa yang ingin kamu ubah?',
+                '👀 Apa yang selalu kamu sembunyikan dari teman-temanmu?',
+                '😶 Apa yang paling kamu takuti dalam hidup ini?',
+                '🤔 Hal apa yang kamu sesali tapi tidak bisa diperbaiki?',
+                '🤐 Pernah melakukan sesuatu yang kamu tidak ingin orang lain tahu?',
+                '😱 Kalau kamu bisa tahu satu rahasia besar dari seseorang, siapa yang kamu pilih?',
+                '💭 Apa yang membuatmu merasa sangat cemas atau takut?',
+                '🙈 Apa hal terburuk yang pernah kamu lakukan di masa remaja?',
+                '👁️ Apa hal yang paling kamu banggakan tentang dirimu sendiri?',
+                '📚 Ada gak keputusan besar dalam hidupmu yang kamu sesali?',
+                '🧐 Apa yang akan kamu lakukan jika tahu kamu hanya punya 1 hari lagi hidup?',
+                '🤐 Ada gak hal yang kamu sembunyikan dari orang yang sangat dekat denganmu?',
+                '💔 Apa yang pernah membuatmu patah hati?',
+                '🌑 Apa hal yang kamu sangat takuti tetapi tidak ingin orang lain tahu?',
+                '🔒 Apa yang kamu sembunyikan dari keluarga kamu?',
+                '💭 Apakah ada keputusan besar yang kamu ambil dengan menyesal?',
+                '🛑 Apa kebiasaan buruk yang sulit kamu tinggalkan?',
+                '🤯 Apakah ada sesuatu yang kamu ingin katakan pada seseorang, tetapi kamu selalu takut untuk mengatakannya?',
+                '🙈 Apa yang selalu membuatmu merasa cemas sebelum tidur?',
+                '🎭 Siapa yang paling kamu khawatirkan akan melukai perasaanmu?',
+                '🎥 Apa film yang paling menggambarkan hidupmu sejauh ini?',
+                '📜 Apa tujuan hidupmu yang paling penting menurutmu?'
+            ],
+            'dare': [
+                '🔥 Kirim chat "Aku suka kamu" ke kontak terakhir yang kamu chat!',
+                '😜 Kirim voice note bilang "Aku adalah manusia paling lucu sedunia."',
+                '🤡 Foto selfie dengan ekspresi wajah paling aneh dan kirim ke grup!',
+                '🕺 Kirim video kamu joget lagu favorit selama 10 detik.',
+                '📸 Post story IG dengan caption "Aku lagi kena dare nih, tolong selamatkan!"',
+                '🎤 Nyanyikan lagu favoritmu dan kirimkan ke teman!',
+                '🤳 Ambil foto dengan ekspresi paling serius dan kirimkan ke grup!',
+                '🎮 Mainkan game di ponselmu selama 5 menit dan kirimkan tangkapan layar score tertinggi!',
+                '📱 Kirim pesan ke mantanmu yang isinya hanya "Hai!"',
+                '💃 Cobalah joget gaya bebas selama 20 detik dan kirim video ke grup!',
+                '📸 Foto makananmu dan kirim ke teman dengan caption "Ini yang aku makan hari ini, lapar banget!"',
+                '🖋️ Tulis pesan di papan tulis atau kertas dengan tulisan besar "Aku lagi kena dare!" dan kirim fotonya!',
+                '🌍 Video diri kamu jalan mundur selama 15 detik dan kirim ke grup!',
+                '📱 Ganti foto profilmu dengan gambar lucu selama 1 jam!',
+                '🥳 Berpura-puralah menjadi karakter kartun selama 1 menit dan kirimkan video ke grup!',
+                '🥴 Coba lakukan mimik wajah yang paling kocak dan kirim ke teman-temanmu!',
+                '🎧 Dengarkan lagu yang sangat kamu benci selama 5 menit dan ceritakan perasaanmu setelah itu!',
+                '🎬 Rekam video diri kamu berbicara tentang topik acak selama 1 menit dan kirim ke grup!',
+                '🎤 Cobalah untuk menyanyi lagu yang kamu tidak kuasai selama 30 detik!',
+                '🖼️ Gambar wajahmu di atas kertas dengan tangan kiri, lalu kirim fotonya!',
+                '🕶️ Ambil foto dengan pakaian paling konyol yang kamu punya dan kirim ke grup!',
+                '📲 Kirimkan emoji yang paling mencerminkan dirimu ke grup!',
+                '🎨 Buat gambar dengan benda-benda yang ada di sekitar kamu, kirim foto hasilnya!',
+                '🤩 Berpura-pura menjadi selebritas selama 2 menit dan rekam video!',
+                '🎁 Beli sesuatu yang tidak pernah kamu butuhkan dan tunjukkan pada teman-teman!',
+                '🤳 Video dirimu melakukan tantangan dengan tangan di atas kepala selama 1 menit!',
+                '🍕 Ambil foto makanan cepat saji dan caption "Makan malam ala anak gaul!"',
+                '🎵 Kirim lagu yang membuatmu teringat seseorang ke grup!',
+                '🔄 Ubah status WhatsApp dengan kata-kata yang sangat random selama 2 jam!'
+            ],
+            'quotespsikologi': [
+                '🧠 "Kekuatan terbesar yang dimiliki manusia adalah kemampuan untuk mengendalikan pikirannya." - Buddha',
+                '🌱 "Pikiran kita membentuk dunia kita. Jika kita ingin perubahan dalam hidup, kita harus mulai dengan pikiran."',
+                '💭 "Jangan biarkan masa lalu mengendalikan masa depanmu. Kamu memiliki kekuatan untuk mengubahnya sekarang."',
+                '💡 "Perubahan dimulai dari dalam diri kita, dan itu terjadi ketika kita memilih untuk melihat dunia dengan cara yang berbeda."',
+                '✨ "Bukan berapa kali kamu jatuh yang menentukan, tapi berapa kali kamu bangkit setelahnya."',
+                '🌸 "Kebahagiaan tidak datang dari luar, tetapi dari cara kita merespon apa yang terjadi di dalam diri kita."',
+                '🧘 "Kesehatan mental itu penting, dan menjaga pikiran sama pentingnya dengan menjaga tubuh."',
+                '🔑 "Ketika kamu berhenti menginginkan yang tidak bisa kamu kontrol, kamu akan menemukan kedamaian."',
+                '🌻 "Cobalah untuk tidak terlalu keras pada dirimu sendiri, kamu sudah berusaha dengan baik."',
+                '🎯 "Kehidupan ini penuh dengan ketidakpastian, dan cara kita meresponnya adalah kunci untuk kebahagiaan."',
+                '💬 "Kesulitan yang kamu hadapi sekarang adalah jembatan menuju kekuatan yang lebih besar."',
+                '🌙 "Jika kamu merasa terjebak, ingatlah bahwa kamu memiliki kemampuan untuk berubah kapan saja."',
+                '🧠 "Kendalikan pikiranmu, dan kamu akan mengendalikan hidupmu."',
+                '🌱 "Sukses sejati bukanlah pencapaian materi, tapi kedamaian dalam hati dan pikiran."',
+                '💭 "Self-compassion adalah kunci untuk membebaskan diri dari tekanan dan rasa bersalah."',
+                '🌟 "Pikiran positif bukan hanya tentang melihat hal baik, tetapi tentang memahami bahwa setiap tantangan adalah kesempatan."',
+                '💡 "Perjalanan untuk memahami diri sendiri adalah perjalanan terindah yang akan membawa ketenangan batin."',
+                '🌸 "Belajarlah untuk menerima dirimu apa adanya, karena hanya dengan itu kamu bisa berkembang."',
+                '✨ "Keberanian bukanlah tanpa rasa takut, tapi kemampuan untuk terus maju meskipun takut."',
+                '🌻 "Cinta pada diri sendiri adalah langkah pertama untuk bisa mencintai orang lain dengan tulus."',
+                '😇"Ketika kita merasa sendiri, ingatlah bahwa hati kita adalah rumah bagi segala rasa."',
+                '💔 "Melepas bukan berarti menyerah, tapi mengerti bahwa ada hal yang memang tak bisa dipaksakan."',
+                '🌧️ "Air mata mungkin tak menyelesaikan masalah, tapi ia meringankan beban di hati."',
+                '🥀 "Kenangan indah bersamamu kini terasa seperti duri yang menusuk kalbu."',
+                '😔 "Berharap waktu bisa diputar kembali, hanya untuk memperbaiki semua kesalahan."',
+                '🌑 "Dalam kegelapan hati, mencari setitik cahaya pun terasa begitu sulit."',
+                '⏳ "Mencoba melupakanmu sama sulitnya dengan mengingat seseorang yang tak pernah kukenal."',
+                '💔 "Rasa sakit ini mungkin tak terlihat, tapi lukanya begitu dalam."',
+                '🌧️ "Biarlah hujan malam ini menjadi saksi bisu betapa rindunya hatiku."',
+                '🥀 "Mungkin kita ditakdirkan untuk bertemu, tapi tidak untuk bersama selamanya."',
+                '😔 "Setiap lagu cinta yang kudengar, entah mengapa selalu mengingatkanku padamu."',
+                '🌑 "Meratapi kepergianmu adalah lagu sedih yang tak pernah berhenti kuputar."',
+                '⏳ "Berjalan tanpamu terasa seperti melangkah di atas pecahan kaca."',
+                '💔 "Hati ini seperti rumah kosong setelah kepergianmu."',
+                '🌧️ "Biarkan air mata ini jatuh, mungkin ia bisa menghapus jejakmu di hatiku."',
+                '🥀 "Mencoba tersenyum padahal hati menangis adalah kepalsuan yang menyakitkan."',
+                '😔 "Dulu kamu adalah alasan bahagiaku, kini kamu adalah alasan air mataku."',
+                '🌑 "Kesendirian ini semakin terasa pekat setelah kamu pergi."',
+                '⏳ "Setiap detik tanpamu terasa seperti berabad-abad."',
+                '💔 "Mungkin suatu saat nanti, luka ini akan sembuh dan aku bisa tersenyum lagi."',
+            ],
+        };
+
+        let currentCategory = null;
+
+        function displayQuote(quote) {
+            document.getElementById('displayedQuote').innerText = quote;
+        }
+
+        function changeQuoteCategory(category) {
+            if (quotesData[category]) {
+                currentCategory = category;
+                const randomIndex = Math.floor(Math.random() * quotesData[category].length);
+                displayQuote(quotesData[category][randomIndex]);
+            } else {
+                displayQuote('Category not found.');
+            }
+        }
+
+        function displayRandomQuote() {
+            if (currentCategory) {
+                const randomIndex = Math.floor(Math.random() * quotesData[currentCategory].length);
+                displayQuote(quotesData[currentCategory][randomIndex]);
+            } else {
+                displayQuote('Please select a category first.');
+            }
+        }
+    </script>
+</body>
+</html>

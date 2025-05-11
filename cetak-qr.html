@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            background-color: #333;
+            color: #f0f0f0;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #qrcode-container {
+            margin-top: 20px;
+            background-color: #333;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        #qrcode {
+            max-width: 200px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        #error-message {
+            color: #ff6b6b;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code Generator</h1>
+        <div class="input-group">
+            <input type="text" id="qr-text" placeholder="Masukkan teks atau URL">
+            <button onclick="generateQRCode()">Buat QR Code</button>
+        </div>
+        <div id="qrcode-container" style="display: none;">
+            <h2>QR Code Anda:</h2>
+            <img id="qrcode" src="" alt="QR Code">
+        </div>
+        <p id="error-message" style="color: yellow;"></p>
+    </div>
+
+    <script>
+        function generateQRCode() {
+            const qrText = document.getElementById('qr-text').value.trim();
+            const qrcodeContainer = document.getElementById('qrcode-container');
+            const qrcodeImage = document.getElementById('qrcode');
+            const errorMessage = document.getElementById('error-message');
+
+            if (!qrText) {
+                errorMessage.textContent = 'Masukkan teks atau URL terlebih dahulu!';
+                qrcodeContainer.style.display = 'none';
+                return;
+            }
+
+            errorMessage.textContent = '';
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(qrText)}&size=200x200`;
+            qrcodeImage.src = qrUrl;
+            qrcodeContainer.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
